@@ -1,0 +1,41 @@
+class ActiveSupport::TestCase
+
+  def self.should_require_organizer(action, method, params = {})
+    context "on #{method} to #{action}" do
+      failure = lambda do
+        should_respond_with :redirect
+        should_redirect_to("root") { root_path }
+      end
+
+      context "when not logged in" do
+        setup { send("#{method}", action, params) }
+
+        failure.call
+      end
+    end
+  end
+
+  def self.should_require_admin(action, method, params = {})
+    context "on #{method} to #{action}" do
+      failure = lambda do
+        should_respond_with :redirect
+        should_redirect_to("root") { root_path }
+      end
+
+      context "when not logged in" do
+        setup { send("#{method}", action, params) }
+
+        failure.call
+      end
+
+      context "when logged in as organizer" do
+        setup do
+          login_as_organizer
+          send("#{method}", action, params) 
+        end
+
+        failure.call
+      end
+    end
+  end
+end

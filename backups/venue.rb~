@@ -1,0 +1,24 @@
+class Venue < ActiveRecord::Base
+  has_one :location
+  has_many :flyers
+
+  named_scope :with_flyers,
+            :conditions => ['exists (select * from flyers where venue_id = venues.id)']
+
+  accepts_nested_attributes_for :location
+
+  after_create :attach_location
+
+  def attach_location
+    create_location
+  end
+
+  def to_param
+    "#{id}-#{name.to_url}"
+  end
+
+  def to_s
+    self.name
+  end
+
+end

@@ -1,0 +1,4 @@
+%p.notice
+  = flash[:notice]
+  .close_flash 
+    = link_to(t(:close), '#')

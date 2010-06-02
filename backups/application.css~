@@ -1,0 +1,201 @@
+body, p, ol, ul, td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size:   13px;
+  line-height: 18px;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+a { color: #fff; text-decoration:none; outline:none; }
+a:hover { color: #39b54a; background: none; }
+
+a img {
+    border:2px solid #fff;
+}
+
+img {
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+}
+
+a.today img {
+    border:4px solid #111;
+}
+
+h1, h2, h3, h4, h5 {
+  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
+}
+
+h1 {
+  font-size: 16px;
+  line-height:1em;
+}
+
+h2 {
+  color: #ddd;
+  font-size: 12px;
+}
+
+h3 {
+  float: right;
+  color: #ddd;
+  font-size: 16px;
+}
+
+.green {
+  color: #39b54a;
+}
+
+.float_half h4{
+  float:left;
+  margin-top: 25px;
+  margin-bottom: 5px;
+}
+
+h4 {
+  color: #ddd;
+  font-size: 18px;
+}
+
+h5 {
+  float: right;
+  color: #ddd;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+input[type="text"], input[type="password"], textarea, select{
+    border: 0px;
+    color: #555;
+    background: url('/images/layout/field.png');
+    font-size:14px;
+    margin:0 0 5px;
+    padding:8px 0px 0px 8px;
+    width:168px;
+    height:24px;
+}
+
+ select, input.date {
+    background: url('/images/layout/dropdown.png');
+}
+
+input[type="file"]{
+    width:50px;
+    margin-top: 5px;
+    font-size: 9px;
+    background: #f8f8f8;
+    margin-bottom: 3px;
+    color: #000;
+    font-family: arial, helvetica, sans-serif;
+}
+
+
+input[type="submit"] {
+    border:none;
+    color: #fff;
+    font-weight:bold;
+    font-size: 11px;
+    padding: 0px;
+    margin: 0px;
+    background: url('/images/layout/submit.png');
+    width: 76px;
+    height: 31px;
+}
+
+input[type="submit"]:hover, input[type="submit"]:focus {
+    cursor:pointer;
+}
+
+input:focus {
+    outline-style: none;
+}
+
+#search {
+    background: url('/images/layout/search.png');
+    width:153px;
+    height:28px;
+    padding: 10px 52px 0px 12px;
+}
+
+#search:focus {
+    outline-style: none;
+}
+
+input.wrong, .fieldWithErrors input, .fieldWithErrors textarea, .fieldWithErrors select {
+    color: #f00;
+}
+
+select.auto{
+    width: auto;
+}
+
+textarea {
+    height: 100px;
+}
+
+textarea.wide {
+    width: 100%;
+    height: 300px;
+}
+
+hr {
+        border: 0;
+        width: 100%;
+        background-color: #ebebeb;
+        color: #ebebeb;
+        height: 1px;
+        text-align: center;
+        margin: 10px 0px 10px 0px;
+}
+
+br {
+    clear: both;
+}
+
+p {
+    font-size: 12px;
+}
+
+table {
+    border-collapse: collapse;
+    width:100%;
+    text-align: left;
+}
+
+table img {
+  border:none;
+}
+
+th {
+    background: #666;
+    color: #eee;
+}
+
+table.list {
+    width: 97%;
+    margin: 15px 10px 5px 10px;
+}
+
+table.list td, table.list th {
+    padding: 4px 0px 4px 10px;
+    border-bottom: 1px solid #666;
+}
+
+.error, .notice, .warning, .message, .success {
+    padding: 10px 20px 10px 20px;
+    margin-bottom: 10px;
+    border: 2px solid #ddd;
+}
+
+.error {background:#FBE3E4;color:#8a1f11;border-color:#FBC2C4;}
+.notice {background:#FFF6BF;color:#514721;border-color:#FFD324;}
+.message {background:#FFF6BF;color:#514721;border-color:#FFD324;}
+.success {background:#E6EFC2;color:#264409;border-color:#C6D880;}
+.error a {color:#8a1f11;}
+.notice a {color:#514721;}
+.success a {color:#264409;}

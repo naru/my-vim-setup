@@ -1,0 +1,60 @@
+class Load < ActiveRecord::Base
+
+  include AASM
+
+  extend PaginationFilter
+  
+  belongs_to :county
+  belongs_to :load_category
+
+  has_many :statistics, :as => :analyzable, :dependent => :nullify
+  has_many :feedbacks, :dependent => :nullify
+
+  validates_presence_of :load_category_id, :county_id, :ad_type, :email
+  validates_length_of :email, :within => 6..100
+  validates_format_of :email, :with => Authentication.email_regex, :message => I18n.t("activerecord.errors.messages.look_like_email")
+
+  aasm_column :state
+  aasm_initial_state :pending
+  aasm_state :pending
+  aasm_state :live
+  aasm_state :closed
+
+  aasm_event :publish do
+    transitions :to => :live, :from => [:pending, :closed]
+  end
+
+  aasm_event :close do
+    transitions :to => :closed, :from => [:pending, :live]
+  end
+
+  def to_param
+    "#{id}-#{title.to_url}"
+  end
+
+  def title
+    [I18n.t(self.ad_type), I18n.t(self.load_category), self.amount, self.location, self.county].reject { |e| e.blank? }.join(", ")
+  end
+
+  def oneliner_ad
+    [I18n.t(self.load_category).capitalize, self.amount, self.location, self.county, self.info].reject { |e| e.blank? }.join(", ")
+  end
+
+  def to_s
+    self.title
+  end
+
+  def self.paginate_conditions(options)
+    ["location LIKE ?", "%#{options[:search]}%"]
+  end
+
+  named_scope :live,
+    :conditions => ['state = ?', 'live']
+
+  named_scope :offers,
+    :conditions => ['ad_type = ?', 'offer']
+
+  named_scope :requests,
+    :conditions => ['ad_type = ?', 'request']
+
+end

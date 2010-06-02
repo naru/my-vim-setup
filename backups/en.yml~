@@ -1,0 +1,103 @@
+en:
+  en: "English"
+  ru: "Russian"
+  new: "New"
+  show: "Show"
+  edit: "Edit"
+  delete: "Delete"
+  are_you_sure: "Are you sure?"
+  pository: "Yes"
+  negatory: "No"
+  options: "Options"
+  cms: "CMS"
+  drag: "drag"
+  log_out: "Log Out"
+  partners: "PARTNERS"
+  header_slogan: "Customs Clearance<br/>Forwarding<br/>Warehousing"
+  compulsory_fields: "compulsory fields"
+  close: "close"
+  empire_moscow: "Empire, Moscow"
+  save: "Save"
+  send: "Send"
+  news_ucase: "NEWS"
+
+  # Language
+  language: "Language"
+  languages: "Languages"
+  new_language: "New Language"
+  edit_language: "Edit Language"
+  page_id: "Frontpage"
+  language_code: "Language Code"
+  country_code: "Country Code"
+  site_name: "Site Name"
+  site_email: "Site E-mail"
+  company_name: "Company Name"
+  meta_description: "Meta Description"
+  meta_keywords: "Meta Keywords"
+  contacts: "Contacts"
+  footer: "Footer"
+
+  # Page
+  page: "Page"
+  pages: "Pages"
+  new_page: "New Page"
+  edit_page: "Edit Page"
+  language_id: "Language"
+  name: "Name"
+  comp_name: "Computerized name"
+  content_header: "Content header"
+  content: "Content"
+  hidden: "Hidden"
+  position: "Position"
+  statistics_count: "Clicks"
+
+  # Article
+  article: "Article"
+  articles: "Articles"
+  new_article: "New Article"
+  edit_article: "Edit Article"
+  news: "News"
+  news_archive: "News archive"
+  read_more: "Read more"
+  headline: "Headline"
+  published_at: "Published at"
+
+  # Feedback
+  contacts: "Contacts"
+  feedback: "Feedback"
+  contact_name: "Name"
+  contact_email: "E-mail"
+  contact_phone: "Phone"
+  subject: "Subject"
+  message: "Message"
+
+  # Common
+  created_at: "Created"
+  updated_at: "Updated"
+
+  flashes:
+    created: "was successfully created."
+    updated: "was successfully updated."
+    deleted: "was successfully deleted."
+    submitted: "was successfully submitted."
+
+  date:
+    formats:
+      default: "%B %d, %Y"
+
+  time:
+    formats:
+      default: "%B %d, %Y - %H:%M"
+
+  activerecord:
+    errors:
+      template:
+        header:
+          one: "1 error prohibited this {{model}} from being saved"
+          other: "{{count}} errors prohibited this {{model}} from being saved"
+        body: "There were problems with the following fields:"
+    models:
+      page: "Page"
+      language: "Language"
+      article: "Article"
+      feedback: "Feedback"

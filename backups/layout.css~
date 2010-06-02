@@ -1,0 +1,123 @@
+body {
+  background: url('/images/layout/bg.jpg');
+  background-repeat: repeat;
+  color: #222;
+  font-family: Verdana, Verdana, Geneva, sans-serif;
+  font-size: 14px;
+  line-height: 18px;
+  margin: 0px;
+  padding: 0px;
+}
+
+body #wrapper {
+  background: #f8f8f8;
+  border: 5px solid #fff;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  width: 950px;
+  -moz-border-radius-topleft: 15px;
+  -webkit-border-top-left-radius: 15px;
+  -moz-border-radius-bottomright: 15px;
+  -webkit-border-bottom-right-radius: 15px;
+  -moz-box-shadow: -3px 3px 7px #222;
+  -webkit-box-shadow: -3px 3px 7px #222;
+  box-shadow: -3px 3px 7px #222;
+}
+
+div #header {
+  height: 125px;
+  padding: 10px;
+}
+
+div #logo {
+  float: left;
+}
+
+div #phone {
+  text-align: right;
+  padding-right: 20px;
+  height: 125px;
+  width: 200px;
+  float: right;
+  background: url('/images/layout/mullakampaania.png');
+}
+
+div #languages {
+  float: right;
+}
+
+div #login_status {
+  float: right;
+  padding: 10px;
+}
+
+div #public_menu, div #admin_menu {
+  float:left;
+  width: 440px;
+  margin-top: 10px;
+  margin-left: 30px;
+}
+
+div #admin_menu {
+  float:left;
+}
+
+div #main_content {
+  background: #f8f8f8;
+  min-height: 500px;
+  padding: 10px;
+}
+
+div #main_left {
+  float: left;
+  min-height: 500px;
+  width: 625px;
+}
+
+div #sidebar {
+  background: #5A4837;
+  float: right;
+  width: 280px;
+  min-height: 500px;
+  padding: 10px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+/*
+  -moz-box-shadow: -2px 2px 1px #222;
+  -webkit-box-shadow: -1px 1px 1px #222;
+  box-shadow: -1px 1px 1px #222;
+*/
+}
+
+body #footer {
+  padding: 5px;
+  text-align: center;
+}
+
+form div {
+  float: left;
+  width: 50%;
+}
+
+div.asset {
+  border: 1px dashed #eee;
+  margin: 10px;
+  padding: 5px;
+}
+
+div #assets {
+  float: right;
+}
+
+div #assets_form {
+  background: #eee;
+  float: right;
+  width: 270px;
+}
+
+.ajax-loading {
+  width: 16px;
+  height: 16px;
+  background: url('/images/layout/ajax-loader.gif');
+}

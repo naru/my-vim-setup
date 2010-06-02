@@ -1,0 +1,59 @@
+body #mobile_wrapper {
+  width:100%;
+  height:100%;
+}
+
+div.mobile_header {
+  background:  url('/images/layout/mobile/header_bg.png');
+  height: 46px;
+  width: 100%;
+}
+
+div.mobile_flyer {
+  margin: 5px 5px 5px 5px;
+  padding: 5px 5px 5px 5px;
+  min-height:80px;
+}
+
+div.mobile_flyer_pic {
+  width: 50px;
+  float:left;
+}
+
+div.mobile_show img {
+  border: none;
+  -webkit-border-radius:0px;
+  -moz-border-radius:0px;
+}
+
+div.comments input[type="text"], div.comments textarea {
+    border: 1px solid #ddd;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    color: #eee;
+    background: none;
+    font-size:14px;
+    margin:0 0 5px;
+    padding:8px 0px 0px 8px;
+    width:168px;
+    height:24px;
+}
+
+div.comments textarea {
+    width:168px;
+    height:200px;
+}
+
+div.comments input.nifty_field {
+    background: none;
+    border: 0px;
+    color: red;
+    margin: 0px;
+    padding: 0px;
+    width: 0px;
+    height: 0px;
+}
+
+.pagination {
+  font-size: 14px;
+}

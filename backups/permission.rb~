@@ -1,0 +1,4 @@
+Factory.define :permission do |f|
+  f.association :user, :factory => :user
+  f.association :role, :factory => :role
+end

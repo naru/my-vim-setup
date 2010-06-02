@@ -1,0 +1,34 @@
+require 'test_helper'
+
+class CampaignTest < ActiveSupport::TestCase
+  should_belong_to :user
+  should_belong_to :flyer
+  should_validate_presence_of :start, :finish
+
+  should "be valid" do
+    assert_valid Factory(:campaign)
+  end
+
+  context "campaign state" do
+    setup { @campaign = Factory(:campaign) }
+
+    should "initially be pending" do
+      assert_equal "pending", @campaign.state
+    end
+    
+    context "on activate" do
+      setup { @campaign.activate }
+      should "change to active" do
+        assert_equal "active", @campaign.state
+      end
+    end
+    
+    context "on close" do
+      setup { @campaign.close }
+      should "change to inactive" do
+        assert_equal "inactive", @campaign.state
+      end
+    end
+
+  end
+end

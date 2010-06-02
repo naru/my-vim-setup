@@ -1,0 +1,31 @@
+- locale_content(@locale_language)
+
+<!DOCTYPE html>
+%html
+%head
+  %title
+    = yield(:site_name)
+    = yield(:site_title)
+<<<<<<< HEAD:app/views/layouts/application.html.haml
+  = raw stylesheet_link_merged :base
+  = raw javascript_include_merged :mootools, :base
+=======
+  = stylesheet_link_tag 'general', 'forms', 'errors', 'application'
+  = javascript_include_tag :defaults
+>>>>>>> 4d5d8637d1b295ba2813f26467c41aa7a1127fd2:app/views/layouts/application.html.haml
+  = csrf_meta_tag
+%body
+  #wrapper
+    #header
+      Awesome header content
+    #menu
+      - @locale_menu.sorted.each do |menu|
+        = link_to menu.name, menu
+      = link_to t(:cms), cms_path
+    #main_content
+      - if notice
+        %p.notice
+          = notice
+      = yield
+    #footer
+      = yield(:footer)

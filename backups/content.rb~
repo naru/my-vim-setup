@@ -1,0 +1,45 @@
+class Content < ActiveRecord::Base
+
+  acts_as_polymorphic_paperclip
+  
+  belongs_to :content_section
+  has_one :static_content, :through => :content_section
+
+  validates_presence_of :content_section_id, :title
+
+  named_scope :sorted,
+    :order => "position asc"
+
+  named_scope :public_menu,
+    :order => 'position asc',
+    :conditions => ['hidden = ?', false]
+
+  before_create :set_position
+
+  after_save :clear_cache
+  after_delete :clear_cache
+
+  def clear_cache
+    Rails.cache.delete("#{self.content_section.comp_name}_#{self.static_content.language_code}")
+  end
+
+  def set_position
+    self.position = (self.content_section.contents.last ? self.content_section.contents.last.position : -1) + 1
+  end
+
+  def to_param
+    "#{id}-#{title.to_url}"
+  end
+
+  def self.admin(page, sort, order, search)
+  paginate :per_page => 100, :page => page,
+           :conditions => ["title LIKE ?", "%#{search}%"],
+           :order => "#{sort || 'created_at'} #{order || 'asc'}"
+  end
+
+  def self.public(page)
+  paginate :per_page => 100, :page => page,
+           :order => "created_at asc"
+  end
+
+end

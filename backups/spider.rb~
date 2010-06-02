@@ -1,0 +1,69 @@
+module Spider
+  class Request
+    #--------------------------------------------------
+    # Returns comma separated values
+    # from localvortex.net javascript:
+    # rating, lat, lng, id
+    #-------------------------------------------------- 
+    def self.get_latlong_values
+      html = open("http://localvortex.net/mapapp").read
+
+      #cut the latlong array out of html
+      a = html[html.index("var latlon = "), html.length]
+      b = a[a.index("[") + 1, a.index("]")]
+      string = b[0, b.index("]")]
+    end
+
+    #--------------------------------------------------
+    #  Returns vortex info extracted from html as array
+    #  [name, address, url]
+    #-------------------------------------------------- 
+    def self.get_vortex_info(vortex_id)
+      html = open("http://localvortex.net/vortexinfo?id=#{vortex_id}").read
+
+      #get the name
+      a = html[html.index("<strong>"), html.length]
+      b = a[a.index(">") + 1, a.length]
+      name = b[0, b.index("</")]
+
+      #get the address
+      if html.index("Aadress:")
+	a = html[html.index("Aadress:"), html.length]
+	b = a[a.index(":") + 1, a.length]
+	address = b[0, b.index("<")]
+      end
+
+      #get the image url
+      if html.index("<img")
+	a = html[html.index("<img"), html.length]
+	b = a[a.index("'") + 1, a.length]
+	url = b[0, b.index("'")]
+      end
+
+      [name, address, url]
+    end
+
+    def self.update_db_from_remote
+      latlng = get_latlong_values.split(",")
+
+      latlng[1..-1].each_slice(4) do |vortex|
+	p vortex[2]
+
+	if Vortex.first(:conditions => {:remote_id => vortex[2].to_i}).nil? and !vortex[2].nil?
+	  p '***********'
+	  vortex_info = get_vortex_info(vortex[2].to_i)
+	  Vortex.create(
+	    :latitude => vortex[0].to_f,
+	    :longitude => vortex[1].to_f,
+	    :remote_id => vortex[2].to_i,
+	    :rating => vortex[3].to_f,
+	    :name => vortex_info[0].gsub("\n",""),
+	    :address => vortex_info[1].gsub("\n",""),
+	    :img_url => vortex_info[2]
+	  )
+	end
+      end
+    end
+
+  end
+end

@@ -1,0 +1,188 @@
+class VortexesController < ApplicationController
+  
+  before_filter :data_from_gmaps, :only => [:new]
+  
+  def captcha_pass?(session, answer)
+    if cookies[:passed]
+      return true
+    end
+      
+    require 'net/http'
+    session = session.to_i
+    answer  = answer.gsub(/\W/, '')
+
+    http = Net::HTTP.new('captchator.com', 80)
+    http.use_ssl = false
+    path = "/captcha/check_answer/"+session.to_s+"/"+answer.to_s
+
+    # GET request -> so the host can set his cookies
+    resp, data = http.get(path, nil)
+
+    data.to_i.nonzero? rescue false
+  end
+  
+  def index
+    @title = 'List of vortices'
+    conds = {}
+    if params[:country_id]
+      @country = Country.find(params[:country_id])
+      conds[:country_id] = @country.id
+      @from = "in #{@country.name}"
+    elsif params[:city_id]
+      @city = City.find(params[:city_id])
+      conds[:city_id] = @city.id
+      @from = "in #{@city.name}, #{@city.country.name}"
+    else
+      @from = "around the world."
+    end
+    
+    @vortexes = []
+    Vortex.all.collect { |v|
+      if params[:country_id]
+        @vortexes.push v if v.vortex_revision.country_id == params[:country_id].to_i and params[:country_id].to_i != 0
+      elsif params[:city_id]
+        @vortexes.push v if v.vortex_revision.city_id == params[:city_id].to_i and params[:city_id].to_i != 0
+      else
+        @vortexes.push v
+      end
+    }
+    
+    if params[:sort] == 'name'
+      @vortexes = @vortexes.sort_by { |a| a.vortex_revision.name.nil? ? '[]' : a.vortex_revision.name.downcase }
+    elsif params[:sort] == 'city'
+      @vortexes = @vortexes.sort_by { |a| a.vortex_revision.city.nil? ? '[]' : a.vortex_revision.city.name.downcase }
+    elsif params[:sort] == 'country'
+      @vortexes = @vortexes.sort_by { |a| a.vortex_revision.country.nil? ? '[]' : a.vortex_revision.country.name.downcase }
+    elsif params[:sort] == 'rate'
+      @vortexes = @vortexes.sort_by { |a| ((a.rate.nil? or a.ratecount < 2) ? 0 : a.rate) }.reverse
+    else
+      @vortexes.reverse!
+    end
+
+    @activetab = 'list'
+  end
+  
+  def show
+    @v = Vortex.find(params[:id])
+    @r = Rate.new
+    @description = @v.description[0..120]
+
+    @vortex_stories = VortexStory.find_all_by_vortex_id(params[:id]).reverse
+    #@vortex_stories = VortexStory.find(:all)
+
+    @title = @v.name
+
+    @activetab = 'list'
+  end
+
+  def new
+    @v = Vortex.new
+    lat = params[:lat] or params[:vortex_revision][:lat] or '0'
+    lon = params[:lon] or params[:vortex_revision][:lon] or '0'
+    @vortex_revision = VortexRevision.new(:lat => lat, :lon => params[:lon])
+
+    @title = "Add a new vortex!"
+
+    @activetab = 'list'
+  end
+  
+  def create
+    p = {}
+    Vortex::Delegate.each {|d| instance_eval("p[:#{d}] = params[:#{d}]") }
+		
+		@v = Vortex.new(params[:vortex])
+    @vortex_revision = VortexRevision.new(params[:vortex_revision])
+    
+    captcha('new')  
+    create_missing_locations(@vortex_revision)
+    
+		if @vortex_revision.save
+		  @v.vortex_revision = @vortex_revision
+		  @v.save
+		  @vortex_revision.update_attribute :vortex_id, @v.id
+			flash[:notice] = 'Vortex added'
+			redirect_to vortexes_url
+		else
+			render :action => 'new'
+		end
+  end
+  
+  def edit
+    @v = Vortex.find(params[:id])
+    @vortex_revision = @v.vortex_revision
+    @activetab = 'list'
+    @title = "Edit '"+@v.name+"'"
+  end
+  
+  
+  def addstory
+    @v = Vortex.find(params[:id])
+    @vortex_revision = @v.vortex_revision
+    @activetab = 'list'
+    @title = "Add a story to '"+@v.name+"'"
+
+    if(!params[:vortex_story].nil?)
+      captcha('addstory')  
+
+      @vortex_story = VortexStory.new(params[:vortex_story])
+      if @vortex_story.save
+        # @vortex_revision.update_attribute :vortex_id, @v.id
+        flash[:notice] = 'Story added'
+        redirect_to vortex_path(@v)
+      else
+        render :action => 'addstory'
+      end
+    
+    else
+      @vortex_story = VortexStory.new(:vortex_id => @v.id)
+    end
+  end
+    
+  def update
+    @v = Vortex.find params[:id]
+    @vortex_revision = VortexRevision.new(params[:vortex_revision])
+    captcha('edit')
+		
+		if @vortex_revision.save
+		  @v.vortex_revision = @vortex_revision
+		  @v.update_attributes params[:vortex]
+		  @vortex_revision.update_attribute :vortex_id, @v.id
+      
+      create_missing_locations(@v) and @v.save
+      redirect_to vortex_path(@v)
+    else
+      render :action => 'edit'
+    end
+  end
+
+  def api_initial_data
+    render :text => Vortex.api_initial_data
+  end
+  
+  private
+    def data_from_gmaps
+      p = params[:address].split(",")
+      @country = p[-1].strip if p.size > 1
+      @city = p[-2].strip.split(" ")[1]   if p.size > 1
+    end
+    
+    def create_missing_locations(v)
+      unless country = Country.find_by_name(v.country_name)
+        country = Country.create(:name => v.country_name)
+      end
+      unless city = City.find_by_name(v.city_name)
+        city = City.create(:name => v.city_name, :country_id => country.id)
+      end
+      v.country_id = country.id
+      v.city_id = city.id
+    end
+    
+    def captcha(action)
+      if captcha_pass? params[:chunky], params[:bacon]
+        cookies[:passed] = true
+      else
+        @captchaerror = true
+  			render :action => action and return
+      end
+    end
+end

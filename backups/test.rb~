@@ -1,0 +1,3 @@
+require 'app'
+
+Spider::Request.save_to_db

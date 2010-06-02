@@ -1,0 +1,15 @@
+<div class=<%= "block_small"%>>
+  <% if flyer.today %>
+  <h5 class="green">Täna</h5>
+  <% else %>
+    <h3><%= good_date(flyer) %></h3>
+  <% end %>
+  <br/>
+  <h5>
+    <%= link_to("#{flyer.event_venue}", flyers_path(:venue => flyer.venue)) %>
+  </h5>
+  <%= link_to(image_tag(flyer.image.url(:thumb_small)), flyer_path(flyer), :title => flyer.event) %>
+  <h2>
+  <%= link_to(flyer.event, flyer_path(flyer)) %>
+  </h2>
+</div>

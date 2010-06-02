@@ -1,0 +1,11 @@
+  <% if logged_in? and current_user.has_role?('organizer') %>
+       <%= link_to( t(:my_flyers), mypage_flyers_path) %>
+  <% end %>
+  <% if logged_in?and current_user.has_role?('superadmin') %>
+       <%= link_to(t(:all_flyers), admin_flyers_path) %>
+       <%= link_to(t(:venues), venues_path) %>
+       <%= link_to(t(:locations), admin_locations_path) %>
+       <%= link_to(t(:users), admin_users_path) %>
+       <%= link_to(t(:comments), admin_comments_path) %>
+  <% end %>
+<br/>

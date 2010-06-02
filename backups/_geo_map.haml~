@@ -1,0 +1,2 @@
+#geo_map
+  %script{:type => "text/javascript", :src => "http://www.google.com/jsapi?key=#{GMAP_API_KEY}"}

@@ -1,0 +1,67 @@
+- locale_content(@locale_language)
+
+<!DOCTYPE html>
+%html{ :lang => yield(:language) }
+  %head
+    %title
+      = "#{yield(:site_name)} - #{@page ? @page.name : yield(:site_title)}"
+    = render :partial => 'shared/meta_tags'
+    = stylesheet_link_merged :base, :formcheck
+    = javascript_include_merged :mootools, :base
+    = javascript_include_merged :formcheck, "formcheck_#{I18n.locale}" if form?
+    = javascript_include_tag 'tiny_mce/tiny_mce', 'tiny_mce/init' if form?
+  %body
+    #wrapper
+      #centerized
+        #roof
+          .location
+            = t(:empire_moscow)
+          #languages
+            = render :partial => 'shared/languages'
+          .phone 
+            +7 (495) 236 46 74 &nbsp;  +7 (926) 236 46 04
+        #header
+          #logo
+            = link_to image_tag('layout/logo.png'), root_path
+          #menu
+            .menu_item
+              = link_to @frontpage, root_path
+            .menu_border
+            - if @locale_menu
+              - @locale_menu.each_with_index do |page, index|
+                - unless page == @frontpage
+                  .menu_item
+                    = link_to page, page
+                  .menu_border
+            .menu_item
+              = link_to t('contacts'), contacts_path
+            %br/
+            .admin_menu
+              = render :partial => 'shared/admin_menu' if user_signed_in?
+        #map
+        .content_column_right
+          #content-top
+            = yield(:content_header)
+          #main_content
+            = render :partial => 'shared/notices' if flash[:notice]
+            = yield
+          - if @page == @frontpage
+            #partners
+              %div
+                %h3= t(:partners)
+              %div
+                .dsv
+        .content_column_left
+          #slogan
+            %h1= t(:header_slogan)
+          - if !@recent_articles.blank? and root_path?
+            <br/>
+            #news
+              %h2= t(:news_ucase) 
+              = render :partial => 'articles/recent'
+          = yield(:left_column)
+        %br
+        #footer
+          = yield(:footer)
+
+  = render :partial => 'shared/google_analytics'

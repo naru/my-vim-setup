@@ -1,0 +1,25 @@
+# Filters added to this controller apply to all controllers in the application.
+# Likewise, all the methods added will be available for all controllers.
+
+class ApplicationController < ActionController::Base
+  helper :all # include all helpers, all the time
+  protect_from_forgery # See ActionController::RequestForgeryProtection for details
+  
+  before_filter :set_lonlat
+  
+  def set_lonlat
+    @client_ip = request.remote_ip
+
+    if @client_ip == '127.0.0.1' or @client_ip == '::1'
+      @client_ip = '193.40.242.188'
+    end
+
+    if session[:geoip].blank?
+      g = GeoIPCity::Database.new('/opt/GeoIP/share/GeoIP/GeoLiteCity.dat')
+      session[:geoip] = g.look_up(@client_ip)
+    end
+  end
+
+  # Scrub sensitive parameters from your log
+  # filter_parameter_logging :password
+end

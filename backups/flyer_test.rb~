@@ -1,0 +1,132 @@
+require 'test_helper'
+
+class FlyerTest < ActiveSupport::TestCase
+  should_belong_to :user
+  should_belong_to :venue
+  should_have_one :location, :through => :venue
+  should_have_many :flyer_statistics
+  should_have_many :comments
+  should_have_attached_file :image
+
+  should "be valid" do
+    assert_valid Factory(:flyer)
+  end
+
+  context "cleanup_html" do
+    setup do
+      @flyer = Factory(:flyer, :info => '<script>Great stuff!</script>')
+    end
+    should "cleanup blacklisted html tags" do
+      assert_equal 'Great stuff!', @flyer.cleanup_html
+    end
+  end
+
+  context "set_info_plain" do
+    setup do
+      @flyer = Factory(:flyer, :info => '<b>Great stuff!</b>')
+    end
+    should "cleanup all html tags" do
+      assert_equal ' Great stuff! ', @flyer.set_info_plain
+    end
+  end
+
+  context "to_param" do
+    setup do
+      @flyer = Factory(:flyer, :event => 'Big time Event?!')
+    end
+    should "cleanup all html tags" do
+      assert_equal "#{@flyer.id}-big-time-event", @flyer.to_param
+    end
+  end
+
+  context "increment_display_counts" do
+    setup do
+      @flyer = Factory(:flyer, :display_count => 1)
+    end
+    context "on flyers" do
+      setup do
+        Flyer.increment_display_counts(Flyer.all.collect &:id)
+      end
+      should_change("flyers display count", :by => 1) {@flyer.reload.display_count}
+    end
+    context "on nothing" do
+      setup do
+        Flyer.increment_display_counts(nil)
+      end
+      should_not_change("flyers display count") {@flyer.reload.display_count}
+    end
+  end
+
+  context "in_map_json_format" do
+    setup do
+      @flyer = Factory(:flyer)
+    end
+    should "return in json" do
+      assert_equal [@flyer.json_format], Flyer.in_map_json_format
+    end
+  end
+
+  context "weekend spans" do
+    setup do
+      @flyer_this = Factory(:flyer, :start => Date.today.end_of_week - 1.day)
+      @flyer_next = Factory(:flyer, :start => (Date.today.end_of_week + 1.week) - 1.day)
+      Factory(:flyer, :start => (Date.today.end_of_week + 3.weeks) - 1.day)
+    end
+    should "return this weekends flyers" do
+      assert_equal [@flyer_this], Flyer.this_weekend
+    end
+    should "return next weekends flyers" do
+      assert_equal [@flyer_next], Flyer.next_weekend
+    end
+  end
+
+  context "event_venue_location" do
+    setup do
+      @venue = Factory(:venue)
+      @venue.location.update_attributes(:city => "Tallinn")
+      @flyer = Factory(:flyer, :venue => @venue)
+    end
+    should "return Tallinn" do
+      assert_equal "Tallinn", @flyer.event_venue_location
+    end
+  end
+
+  context "event_venue_w_location" do
+    setup do
+      @venue = Factory(:venue, :name => "Balou")
+      @venue.location.update_attributes(:city => "Tallinn")
+      @flyer = Factory(:flyer, :venue => @venue)
+    end
+    should "return Balou, Tallinn" do
+      assert_equal "Balou, Tallinn", @flyer.event_venue_w_location
+    end
+  end
+
+  context "event_venue" do
+    setup do
+      @venue = Factory(:venue, :name => "Balou")
+      @flyer = Factory(:flyer, :venue => @venue)
+    end
+    should "return Balou" do
+      assert_equal "Balou", @flyer.event_venue
+    end
+  end
+
+  context "event_venue" do
+    setup do
+      @flyer = Factory.build(:flyer)
+      @flyer2 = Factory.build(:flyer)
+    end
+    context "on nonexisting venue" do
+      setup { @flyer.event_venue = "Protest" }
+      should_change("The number of venues", :by => 1) { Venue.count }
+
+      context "on existing venue" do
+        setup do
+          @flyer2.event_venue = "Protest"
+        end
+        should_not_change("The number of venues") { Venue.count }
+      end
+    end
+  end
+end

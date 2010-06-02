@@ -1,0 +1,12 @@
+require File.expand_path('../../vendor/gems', __FILE__)
+#--------------------------------------------------
+# begin
+#   # Require the preresolved locked set of gems.
+#   require "#{File.dirname(__FILE__)}/../vendor/gems/environment"
+# rescue LoadError
+#   # Fallback on doing the resolve at runtime.
+#   require "rubygems"
+#   require "bundler"
+#   Bundler.setup #produced: rake aborted! undefined method `setup' for Bundler:Module /home/kenneth/rails/gossip2/Rakefile:4
+# end
+#-------------------------------------------------- 

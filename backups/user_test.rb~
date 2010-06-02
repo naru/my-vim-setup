@@ -1,0 +1,18 @@
+require 'test_helper'
+
+class UserTest < ActiveSupport::TestCase
+  should_validate_presence_of     :login, :name, :email
+#  should_validate_uniqueness_of   :login,    :case_sensitive => false
+#  should_validate_uniqueness_of   :email,    :case_sensitive => false
+
+  should_have_many :flyers
+  should_have_many :permissions
+  should_have_many :roles, :through => :permissions
+  should_have_many :comments
+
+  should "be valid" do
+    assert_valid Factory(:user)
+  end
+
+
+end

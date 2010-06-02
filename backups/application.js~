@@ -1,0 +1,72 @@
+ActionChain.add({
+  'body': function() {
+    new QuickBox();
+  },
+  
+  '.pages_table': function() {
+    var sortable = '#' + this.get('id') + ' ' + 'tbody';
+
+    new Sortables(sortable,{
+      handle : '.handle',
+
+      onComplete: function(){
+        new Request({
+          url: '/pages/update_order',
+
+          data: {
+            new_order: this.serialize()
+          },
+
+          onSuccess: function() {
+            window.location.href = window.location.href;
+          }
+        }).put();
+      }
+    });
+  },
+
+  '.close_flash:click': function() {
+    this.getParent('div.notice').hide();
+  },
+
+  '.dsv:click': function() {
+    window.open("http://dsv.com", "_blank");
+  },
+
+  '#news': function() {
+    $('content').setStyle('width', '713px')
+    $('main_content').setStyle('width', '708px')
+  },
+
+  '#geo_map': function() {
+    google.load("maps", "2.x", { callback: initialize, language: 'ru' });
+
+    // Call this function when the page has been loaded
+    function initialize() {
+      var map = new google.maps.Map($("geo_map"));
+      var point = new GLatLng(55.716801,37.613153);
+      map.addControl(new GSmallMapControl());
+      map.addOverlay(new GMarker(point));
+      map.setCenter(new google.maps.LatLng(55.716801,37.613153), 14);
+    }
+  },
+
+  'form': function(){
+    new FormCheck(this,
+    {
+      display : {
+        indicateErrors : 2,
+        showErrors : 1,
+        errorsLocation : 3,
+        flashTips : true,
+        fadeDuration : 1000
+      },
+      regexp : {
+        email : /^([a-zA-Z0-9_\.\-\+%])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+      }
+    })
+  }
+
+});
+
+AC_FL_RunContent = 0;

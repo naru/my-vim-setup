@@ -1,0 +1,144 @@
+class FlyersController < ApplicationController
+  include ActsAsTinyURL
+  
+  before_filter :check_access, :except => [:this_weekend, :next_weekend, :index, :admin, :mypage, :show, :new, :create, :print, :today_in_json]
+  before_filter :check_organizer_role, :only => [:mypage, :new, :create, :destroy]
+  before_filter :check_administrator_role, :only => [:admin, :increment_score, :decrement_score]
+  before_filter :find_venue, :only => [:this_weekend, :next_weekend, :index]
+  before_filter :save_statistics, :only => [:show]
+
+  def this_weekend
+    @flyers = flyers.this_weekend.paginate :page => params[:page], :per_page => 35
+    increment_display_counts_on(@flyers)
+    render_index_template
+  end
+
+  def next_weekend
+    @flyers = flyers.next_weekend.paginate :page => params[:page], :per_page => 35
+    increment_display_counts_on(@flyers)
+    render_index_template
+  end
+
+  def index
+    @flyers = flyers.filter_by_date(params[:from] || (Time.zone.now - 6.hours).to_date, params[:to])
+    increment_display_counts_on(@flyers)
+    respond_to do |format|
+      format.html { @flyers }
+      format.json { render :json => Flyer.in_map_json_format }
+    end
+  end
+
+  def admin
+    @flyers = Flyer.all(:order => 'start DESC').paginate :page => params[:page], :per_page => 25
+  end
+
+  def mypage
+    @flyers = current_user.flyers.all(:order => 'start DESC').paginate :page => params[:page], :per_page => 25
+  end
+
+  def print
+    @flyer = Flyer.find(params[:flyer])
+    render :layout => "flyer_print"
+  end
+
+  def show
+    @flyer = Flyer.find(params[:id])
+    @flyer.increment!(:flyer_statistics_total)
+    @comments = @flyer.comments.public(params[:page])
+    @upcoming = Flyer.random_upcoming(params[:id], 5).filter_by_date((Time.zone.now - 3.hours).to_date, nil)
+    increment_display_counts_on(@upcoming)
+    respond_to do |format|
+      format.html { @flyer }
+      format.json { render :json => @flyer.json_format }
+    end
+  end
+
+  def new
+    @flyer = Flyer.new
+  end
+
+  def edit
+    @flyer = Flyer.find(params[:id])
+  end
+
+  def create
+    @flyer = current_user.flyers.build(params[:flyer])
+
+    respond_to do |format|
+      if @flyer.save
+        format.html { redirect_to(@flyer) }
+      else
+        format.html { render :action => "new" }
+      end
+    end
+  end
+
+  def update
+    @flyer = Flyer.find(params[:id])
+
+    respond_to do |format|
+      if @flyer.update_attributes(params[:flyer])
+        format.html { redirect_to(@flyer) }
+      else
+        format.html { render :action => "edit" }
+      end
+    end
+  end
+
+  def destroy
+    @flyer = Flyer.find(params[:id])
+    @flyer.destroy
+    redirect_to :back
+  end
+
+  def increment_score
+    Flyer.find(params[:id]).increment!(:score)
+    redirect_to :back
+  end
+
+  def decrement_score
+    Flyer.find(params[:id]).decrement!(:score)
+    redirect_to :back
+  end
+  
+  def today_in_json
+    respond_to do |format|
+      format.json { render :json => Flyer.today_in_json.first }
+    end
+  end
+
+protected
+
+  def check_access
+    @flyer = Flyer.find(params[:id])
+    redirect_to root_path unless @flyer.access?(current_user)
+  end
+
+  def find_venue
+    @venue = Venue.find(params[:venue]) if params[:venue]
+  end
+
+  def flyers
+    if @venue
+      @venue.flyers
+    elsif params[:location]
+      Flyer.find_by_city(params[:location])
+    else
+      Flyer
+    end
+  end
+
+  def render_index_template
+    render :template => 'flyers/index'
+  end
+
+  def save_statistics
+    user_ip = request.remote_ip
+    existing = FlyerStatistic.find_by_flyer_id_and_user_ip(params[:id], user_ip)
+    FlyerStatistic.create! :flyer_id => params[:id], :user_ip => user_ip unless existing && (existing.created_at > (Time.now - 60.minutes))
+  end
+
+  def increment_display_counts_on(collection)
+    Flyer.increment_display_counts(collection.collect &:id)
+  end
+end

@@ -1,0 +1,33 @@
+class Location < ActiveRecord::Base
+  acts_as_geocodable :address => {
+    :street => :street, :locality => :city, :region => :region,
+    :postal_code => :postal_code, :country => :country
+  }, :units => :kilometers
+
+  belongs_to :venue
+  has_many :flyers, :through => :venues
+  
+  def to_param
+    "#{id}-#{self.city.to_url}"
+  end
+
+   named_scope :with_flyers,
+            :joins => "JOIN venues on venues.id = locations.venue_id JOIN flyers on flyers.venue_id = venues.id",
+            :group => 'locations.id'
+
+   named_scope :with_venues_and_not_in_terms,
+            :conditions => ['EXISTS (select * from venues where location_id = locations.id) AND NOT EXISTS (SELECT * FROM terms WHERE term = locations.name)']
+
+  def longitude
+    geocode.longitude if geocode
+  end
+
+  def latitude
+    geocode.latitude if geocode
+  end
+
+  def to_s
+    self.city
+  end
+
+end

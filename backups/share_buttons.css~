@@ -1,0 +1,68 @@
+
+div.share_buttons {
+  width: 348px;
+  background: #000;
+  padding:5px 4px 5px 8px;
+  -webkit-border-radius:5px;
+  -moz-border-radius:5px;
+  font-size:12px;
+}
+
+div.share_buttons a{
+  height:20px;
+}
+
+div.share_buttons a:hover{
+  color:#fff;
+}
+
+div.share_buttons a:hover .twitter_text, div.share_buttons a:hover .print_text {
+  text-decoration:underline;
+}
+
+div.twitter_button {
+  float:left;
+  background-image: url('/images/layout/twitter-logo.png');
+  background-repeat:no-repeat;
+  background-position: 0px 1px;
+  outline-color:-moz-use-text-color;
+  outline-style:none;
+  outline-width:medium;
+  text-decoration:none;
+  margin:0px 4px 0 2px;
+}
+
+span.twitter_text {
+margin: 0px 0 0 20px;
+}
+
+span.print_button {
+  background-image: url('/images/icons/print.png');
+  background-repeat:no-repeat;
+  outline-color:-moz-use-text-color;
+  outline-style:none;
+  outline-width:medium;
+  text-decoration:none;
+  margin:0 0 0 2px;
+}
+
+span.print_button:hover {
+  text-decoration:none;
+}
+
+span.print_text {
+margin:0 0 0 20px;
+padding-bottom:1px;
+}
+
+span.print_text:hover {
+  text-decoration:underline;
+}
+
+a.rada7_link {
+  color:#ccc;
+}
+
+a.rada7_link img {
+  border:none;
+}

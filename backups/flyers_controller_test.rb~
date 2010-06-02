@@ -1,0 +1,163 @@
+require 'test_helper'
+
+class FlyersControllerTest < ActionController::TestCase
+
+  should_require_admin :admin, 'get'
+
+  context "on GET to :admin as an admin" do
+    setup do
+      login_as_supadmin
+      get :admin
+    end
+
+    should_assign_to :flyers
+    should_render_template :admin
+  end
+
+  context "index action" do
+    setup {@flyer = Factory(:flyer, :display_count => 1)}
+    context "on GET" do
+      setup {get :index}
+      should_change("Display count of the flyer", :by => 1) { @flyer.reload.display_count }
+      should_assign_to :flyers
+      should_render_template :index
+    end
+  end
+
+   context "on GET to :this_weekend" do
+    setup do
+      get :this_weekend
+    end
+    should_assign_to :flyers
+    should_render_template :index
+   end
+
+   context "on GET to :next_weekend" do
+    setup do
+      get :next_weekend
+    end
+    should_assign_to :flyers
+    should_render_template :index
+   end
+
+   should_require_organizer :mypage, 'get'
+
+   context "on GET to :mypage" do
+    setup do
+      user = login_as_organizer
+      @flyer = Factory(:flyer, :user => user)
+      @other_flyer = Factory(:flyer)
+      get :mypage
+    end
+    should_assign_to :flyers
+    should_render_template :mypage
+    should "show organizers flyers" do
+      assert_same_elements [@flyer], assigns(:flyers)
+    end
+   end
+
+   context "show action" do
+     setup { @upcoming = Factory(:flyer, :display_count => 1) }
+     context "on GET" do
+       setup do
+         @flyer = Factory(:flyer)
+         get :show, :id => @flyer.id
+       end
+       should_change("Display count of the sidebar flyer", :by => 1) { @upcoming.reload.display_count }
+       should_assign_to :flyer
+       should_render_template :show
+     end
+   end
+ 
+   should_require_organizer :new, 'get'
+
+   context "on GET to :new" do
+     setup do
+       login_as_organizer
+       get :new 
+     end
+     should_assign_to :flyer
+     should_render_template :new
+   end
+ 
+   should_require_organizer :create, 'get'
+
+   context "on POST to :create" do
+     setup do
+       user = login_as_organizer
+       venue = Factory(:venue)
+       @flyer = Factory.build(:flyer, :user => user, :venue => venue).attributes
+       post :create, :flyer => @flyer
+     end
+ 
+     should_change("The number of flyers", :by => 1) { Flyer.count }
+     should_redirect_to("show") { flyer_path(assigns(:flyer)) }
+   end
+ 
+   should_require_organizer :edit, 'get', :id => Factory(:flyer).id
+ 
+   context "on GET to :edit as an organizer" do
+     setup do
+       user = login_as_organizer
+       @flyer = Factory(:flyer, :user => user)
+       get :edit, :id => @flyer.id
+     end
+ 
+     should_render_template :edit
+   end
+ 
+   context "on GET to :edit as an organizer on someone elses flyer" do
+     setup do
+       user = login_as_organizer
+       @flyer = Factory(:flyer)
+       get :edit, :id => @flyer.id
+     end
+ 
+     should_redirect_to("root") { root_path } 
+   end
+ 
+   should_require_admin :update, 'put', :id => Factory(:flyer).id, :flyer => {:venue => 'balu'}
+ 
+   context "on PUT to :update as an organizer" do
+     setup do
+       user = login_as_organizer
+       @flyer = Factory(:flyer, :user => user)
+       put :update, :id => @flyer.id, :flyer => { :event => 'kaboo' }
+     end
+ 
+     should_respond_with :redirect
+     should_redirect_to("flyer_path") { @flyer }
+     should "change event" do
+       assert_equal 'kaboo', @flyer.reload.event
+     end
+   end
+ 
+   context "on PUT to :update as an organizer on someone elses flyer" do
+     setup do
+       user = login_as_organizer
+       @flyer = Factory(:flyer)
+       put :update, :id => @flyer.id, :flyer => { :event => 'kaboo' }
+     end
+ 
+     should_redirect_to("flyer_path") { root_path }
+   end
+ 
+   should_require_organizer :destroy, 'delete', :id => Factory(:flyer).id
+
+   context "to :destroy as an organizer" do
+     setup do
+       user = login_as_organizer
+       @flyer = Factory(:flyer, :user => user)
+     end
+     context "on DELETE" do
+       setup do
+         @request.env["HTTP_REFERER"] = "http://test.host/flyers/mypage"
+         delete :destroy, :id => @flyer.id
+       end
+       should_respond_with :redirect
+       should_redirect_to("my page") { mypage_flyers_path }
+       should_change("The number of flyers", :by => -1) { Flyer.count }
+     end
+   end
+ 
+end

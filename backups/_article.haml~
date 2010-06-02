@@ -1,0 +1,9 @@
+.news_article
+  %h3
+    = article
+  %span.subtle
+    =l article.published_at
+  %p
+    = article.intro
+  = link_to "#{t('read_more')} »", article
+  %hr

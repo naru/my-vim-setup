@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <%= render :partial => 'shared/meta_content' %>
+    <title><%= "#{@locale_content.site_name} - #{h(yield(:title) || @locale_content.site_title)}" %></title>
+    <%= stylesheet_link_merged :base, :formcheck %>
+
+    <%= javascript_include_merged :mootools, :base %>
+    <%= javascript_include_merged :formcheck, "formcheck_#{I18n.locale}" if form?%>
+    <%= javascript_include_tag 'tiny_mce/tiny_mce', 'tiny_mce/init' if form? %>
+  </head>
+<body>
+
+<div id="wrapper">
+  <div id="header">
+    <div id="logo">
+      <%= link_to(image_tag("layout/logo.jpg"), root_path) %>
+    </div>
+
+    <div id="languages">
+      <%= render :partial => 'shared/languages' %>
+    </div>
+
+    <div id="phone">
+      <div style="float:right;"><h1>50 71 754</h1></div>
+    </div>
+
+   <div id="public_menu">
+      <% tabnav :main do %><% end %>
+    </div>
+
+    <div id="admin_menu">
+      <% tabnav :admin do %><% end %>
+    </div>
+    
+    <div id="login_status">
+      <%= render :partial => 'users/login_status' %>
+    </div>
+
+  </div>
+
+  <div id="main_content">
+    <%= render :partial => 'shared/flash', :locals => {:flash => flash} %>
+    <%= yield %>
+  </div>
+
+  <br />
+
+  <div id="footer">
+    <%= @locale_content.footer %>
+  </div>
+</div>
+
+<%= render :partial => 'shared/google_analytics' unless RAILS_ENV == 'development' or google_anals_key.blank? %>
+
+</body>
+
+</html>

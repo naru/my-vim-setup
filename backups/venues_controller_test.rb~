@@ -1,0 +1,91 @@
+require 'test_helper'
+
+class VenuesControllerTest < ActionController::TestCase
+
+  should_require_admin :index, 'get'
+
+  context "on GET to :index as an admin" do
+    setup do
+      login_as_supadmin
+      get :index
+    end
+
+    should_assign_to :venues
+    should_render_template :index
+  end
+
+  context "show action" do
+    setup do
+      @venue = Factory(:venue)
+      get :show, :id => @venue.id
+    end
+    should_assign_to :venue
+    should_render_template :show
+  end
+
+  should_require_admin :new, 'get'
+
+  context "on GET to :new" do
+    setup do
+      login_as_supadmin
+      get :new
+    end
+    should_assign_to :venue
+    should_render_template :new
+  end
+
+  should_require_admin :create, 'get', :venue => Factory.build(:venue).attributes
+
+  context "on POST to :create" do
+    setup do
+      login_as_supadmin
+      @venue = Factory.build(:venue).attributes
+      post :create, :venue => @venue
+    end
+
+    should_change("The number of venues", :by => 1) { Venue.count }
+  end
+
+  should_require_admin :edit, 'get', :id => Factory(:venue).id
+
+  context "on GET to :edit as an admin" do
+    setup do
+      login_as_supadmin
+      @venue = Factory(:venue)
+      get :edit, :id => @venue.id
+    end
+
+    should_respond_with :success
+    should_render_template :edit
+  end
+
+  should_require_admin :update, 'post', :id => Factory(:venue).id, :venue => { :name => 'babuu'}
+
+  context "on PUT to :update as an admin" do
+    setup do
+      login_as_supadmin
+      @venue = Factory(:venue)
+      put :update, :id => @venue.id, :venue => { :name => 'kaboo' }
+    end
+
+    should_respond_with :redirect
+    should_redirect_to("venue_path") { @venue }
+  end
+
+  should_require_admin :destroy, 'delete', :id => Factory(:venue).id
+
+  context "to :destroy as an admin" do
+    setup do
+      @venue = Factory(:venue)
+    end
+    context "on DELETE" do
+      setup do
+        login_as_supadmin
+        delete :destroy, :id => @venue.id
+      end
+      should_respond_with :redirect
+      should_redirect_to("admin") { venues_path }
+      should_change("The number of venues", :by => -1) { Venue.count }
+    end
+  end
+end

@@ -1,0 +1,39 @@
+/**
+ *  Simple GMap wrapper class.
+ */
+var FlyerMap = new Class({
+
+  Implements: [Options, Events],
+
+  options: {
+    language: 'et',
+    zoomLevel: 14
+  },
+
+  initialize: function(container, options) {
+    this.setOptions(options);
+    this.container = document.id(container);
+    google.load('maps', '2.x', { callback: this.injectMap.bind(this), language: this.options.language });
+  },
+
+  injectMap: function() {
+    Gmap.defineFlaiku();
+    this.map = new google.maps.Map(this.container);
+    this.map.addControl(new GSmallMapControl());
+
+    this.fetchFlyer();
+  },
+
+  fetchFlyer: function() {
+    new Request.JSON({
+      url: window.location.href,
+      onSuccess: function(flyer) {
+        var point = new GLatLng(flyer.latitude, flyer.longitude);
+        this.map.addOverlay(new GMarker(point));
+        this.map.setCenter(new GLatLng(flyer.latitude, flyer.longitude), this.options.zoomLevel);
+      }.bind(this)
+    }).get();
+  }
+
+});
+

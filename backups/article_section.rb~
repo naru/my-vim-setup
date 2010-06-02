@@ -1,0 +1,22 @@
+class ArticleSection < ActiveRecord::Base
+
+  belongs_to :static_content
+
+  has_many :articles
+
+  validates_presence_of :static_content_id, :name, :comp_name
+
+  after_save :clear_cache
+  after_delete :clear_cache
+
+  def clear_cache
+    Rails.cache.delete("#{self.comp_name}_#{self.static_content.language_code}")
+  end
+
+  def self.admin(page, sort, order, search)
+  paginate :per_page => 100, :page => page,
+           :conditions => ["name LIKE ?", "%#{search}%"],
+           :order => "#{sort || 'created_at'} #{order || 'asc'}"
+  end
+
+end

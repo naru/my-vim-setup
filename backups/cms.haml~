@@ -1,0 +1,79 @@
+= h1 t('cms')
+
+- @languages.each do |language|
+  %h2
+    = t(language.language_code)
+  = link_to(image_tag('icons/edit.png', :title => t(:edit)), edit_language_path(language))  
+  = link_to(image_tag('icons/delete.png', :title => t(:delete)), language, :confirm => t(:are_you_sure), :method => :delete)
+  %hr
+
+  %h3
+    = t('pages')
+  %table{:id => language.language_code, :class => "pages_table"}
+    %thead
+      %tr
+        %th
+          = t('position')
+        %th
+          = t('name')
+        %th
+          = t('hidden')
+        %th
+          = t('statistics_count')
+        %th
+          = t('options')
+    %tbody
+      - language.pages.sorted.each do |page| 
+        %tr{:id => "#{language.language_code}_#{page.id}", :class => cycle('odd', 'even')}
+          %td.handle
+            = "[#{t(:drag)}]"
+          %td
+            =h page.name 
+          %td
+            =h page.hidden.in_words 
+          %td
+            = "#{page.statistics_count}/#{page.statistics_total}"
+          %td
+            = link_to(image_tag('icons/show.png', :title => t(:show)), page)  
+            = link_to(image_tag('icons/edit.png', :title => t(:edit)), edit_page_path(page))  
+            = link_to(image_tag('icons/delete.png', :title => t(:delete)), page, :confirm => t(:are_you_sure), :method => :delete)
+  %p
+    = link_to image_tag('icons/new.png', :title => t(:new)), new_page_path(:language => language.id)
+    = link_to t(:new_page), new_page_path(:language => language.id)
+  %hr
+
+  %h3
+    = t('news')
+  %table
+    %thead
+      %tr
+        %th
+          = t('headline')
+        %th
+          = t('published_at')
+        %th
+          = t('statistics_count')
+        %th
+          = t('options')
+    %tbody
+      - language.articles.each do |article|
+        %tr{:class => cycle('odd', 'even')}
+          %td
+            =h article.headline
+          %td
+            =l article.published_at
+          %td
+            = "#{article.statistics_count}/#{article.statistics_total}"
+          %td
+            = link_to(image_tag('icons/show.png', :title => t(:show)), article)
+            = link_to(image_tag('icons/edit.png', :title => t(:edit)), edit_article_path(article))
+            = link_to(image_tag('icons/delete.png', :title => t(:delete)), article, :confirm => t(:are_you_sure), :method => :delete)
+  %p
+    = link_to image_tag('icons/new.png', :title => t(:new)), new_article_path(:language => language.id)
+    = link_to t(:new_article), new_article_path(:language => language.id)
+  %hr
+
+- if (default_languages(nil).size > 0)  
+  %p
+    = link_to image_tag('icons/new.png', :title => t(:new)), new_language_path 
+    = link_to t(:new_language), new_language_path

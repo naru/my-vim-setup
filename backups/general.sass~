@@ -1,0 +1,86 @@
+body
+  background: #fff
+  color: #383838
+  font-family: Verdana, Arial, Helvetica, sans-serif
+  font-size: 15px
+  margin: 0
+  padding: 0
+
+a, p
+  color: #383838
+  font-family: Verdana, Arial, Helvetica, sans-serif
+
+p
+  text-align: justify
+
+table
+  text-align: left
+  width: 100%
+
+th
+  background: #555
+  color: #fff
+
+h1, h2, h3, h4, h5, h6
+  font: 18px Arial, sans-serif
+
+h1, h2
+  font-size: 20px
+  margin: 0
+
+h1
+  color: #1978a6
+
+h3, h4
+  font-size: 18px
+  margin: 0.5em 0px
+
+h3, h5
+  color: #1978a6
+
+img
+  border: 0px
+
+br
+  clear: both
+
+hr
+  background-color: #ebebeb
+  border: 0
+  color: #ebebeb
+  height: 1px
+  margin: 10px 0px 10px 0px
+  text-align: center
+  width: 100%
+
+form
+  br
+    clear: both
+  div
+    float: left
+    width: 50%
+
+.odd
+  background: #eee
+
+.even
+  background: #ccc
+
+.subtle
+  color: #aaa
+  font-size: 10px
+
+.notice
+  background: #c5d9f1
+  color: #514721
+  font-size: 14px
+  padding: 10px
+
+.close_flash
+  width: 100px
+  float: right
+
+.handle
+  color: #555
+  cursor: move
+  width: 70px

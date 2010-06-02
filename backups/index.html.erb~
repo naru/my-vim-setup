@@ -1,0 +1,19 @@
+<div class="sponsored_row">
+  <% if @sponsored %>
+    <% @sponsored[0..3].each do |flyer| %>
+      <%= render :partial => 'flyer', :locals => {:flyer => flyer} %>
+      <%= cycle('','','','<br/>') %>
+    <% end %>
+  <% end %>
+</div>
+
+<% if @flyers %>
+  <% if @flyers.size > 3 %>
+    <% @flyers[0..-1].each do |flyer| %>
+      <%= render :partial => 'flyer_small', :locals => {:flyer => flyer} %>
+      <%= cycle('', '', '', '' ,'', '<br/>') %>
+    <% end %>
+  <%  end %>
+<% end %>
+<br />
+

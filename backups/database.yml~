@@ -1,0 +1,20 @@
+development:
+  adapter: postgresql
+  database: empire_dev
+  username: rails
+  password: fupg
+
+test: &TEST
+  adapter: postgresql
+  database: empire_test
+  username: rails
+  password: fupg
+
+production:
+  adapter: mysql
+  database: empire_production
+  username: root
+  password:
+
+cucumber:
+  <<:  *TEST

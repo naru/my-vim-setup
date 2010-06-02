@@ -1,0 +1,411 @@
+et:
+##Üldine
+  home: "Kodu"
+  public: "Avalik"
+  admin: "Admin"
+  new: "Uus"
+  edit: "Muuda"
+  destroy: "Kustuta"
+  show: "Näita"
+  options: "Valikud"
+  created_at: "Loodud"
+  updated_at: "Uuendatud"
+  are_you_sure: "Oled sa kindel?"
+  compulsory_fields: "kohustuslikud väljad"
+  submit: "Submit"
+  vote: "Hääletus"
+  votes: "Hääled"
+  add_new_gallup_option: "Lisa uus vastusevariant"
+  show_results: "Vaata tulemusi"
+  cms: "CMS"
+  search: "Otsi"
+  search_by: "Otsing"
+  change: "Muuda"
+  state: "Olek"
+  pending: "Ootel"
+  live: "Avalik"
+  closed: "Suletud"
+  read_further: "Loe edasi..."
+  send: "Saada"
+##Asset
+  asset: "Pilt"
+  assets: "Pildid"
+  belongs_to: "kuulub"
+  remove: "Eemalda"
+  add_new_asset: "Lisa pilt"
+#attributes
+  file: "Fail"
+#flashes
+  asset_created: "Uus pilt on edukalt loodud."
+  asset_destroyed: "Pilt on kustutatud."
+# Statistika
+  statistics_count: "Klikke"
+##Kommentaar
+  comment: "Kommentaar"
+  comments: "Kommentaarid"
+  commentable: "Kommenteeritav"
+  anonymous: "Anonüümne"
+  comments_count: "Kommentaare"
+#attributes
+  commentable_id: "Kommenteeritava id"
+  commentable_type: "Kommenteeritava tüüp"
+  user_name: "Kasutajanimi"
+  user_ip: "Kasutaja IP"
+  content: "Sisu"
+#flashes
+  comment_created: "Uus Kommentaar edukalt loodud."
+  comment_failed: "Kommentaari loomine nurjus."
+  comment_destroyed: "Kommentaar on kustutatud."
+##Kasutaja Lisad 
+  view_profile: "Vaata profiili"
+  edit_profile: "Muuda profiili"
+  welcome: "Tere"
+  log_out: "Logi Välja"
+  sign_up: "Registreeri"
+  or: "või"
+  log_in: "Logi sisse"
+  already_signed_up: "Kas Sul juba on konto?"
+  not_signed_up: "Ei ole kontot?"
+  password: "Parool"
+  password_confirmation: "Parooli kinnitus"
+  remember_me: "Pea mind meeles"
+##Session
+#flashes
+  session_created: "Oled edukalt sisse loginud."
+  session_failed: "Vale kasutajanimi või parool."
+  session_ended: "Oled edukalt välja loginud."
+# Lisa Tellingud siin
+# Load
+  load: "Koorem"
+  loads: "Koormad"
+  new_load: "Uus Koorem"
+  edit_load: "Muuda Koormat"
+  publish: "Avalda"
+  close: "Sulge"
+  feedbacks_count: "Tagasisidet"
+  buy: "Soovin osta"
+  sell: "Soovin müüa"
+  offer: "Pakun"
+  request: "Otsin"
+  we_offer: "Pakume"
+  we_request: "Otsime"
+#attributes
+  advertise: "Kuuluta"
+  ad_type: "Kuulutuse tüüp"
+  load_category_id: "Pinnase tüüp"
+  amount: "Kogus"
+  county_id: "Maakond"
+  location: "Asukoht"
+  info: "Lisainfo"
+  name: "Nimi"
+  email: "E-mail"
+  phone: "Telefon"
+#flashes
+  load_created: "Uus kuulutus edukalt lisatud, ootab administraatori poolt kinnitamist."
+  load_updated: "Koorem edukalt uuendatud."
+  load_destroyed: "Koorem kustutatud."
+# Tagasiside
+  feedback: "Tagasiside"
+  feedbacks: "Tagasiside"
+  new_feedback: "Uus Tagasiside"
+  edit_feedback: "Muuda Tagasisidet"
+#attributes
+  contact_name: "Nimi"
+  contact_phone: "Telefon"
+  contact_email: "E-mail"
+  load_id: "Koorem"
+  message: "Teade"
+  reviewed: "Vaadatud"
+#flashes
+  feedback_created: "Teade on edukalt edastatud. Teiega võetakse ühendust!"
+  feedback_destroyed: "Tagasiside on kustutatud."
+# Maakond
+  county: "Maakond"
+  counties: "Maakonnad"
+  new_county: "Uus Maakond"
+  edit_county: "Muuda Maakonda"
+#attributes
+  name: "Nimi"
+#flashes
+  county_created: "Uus Maakond oli edukalt loodud."
+  county_updated: "Maakond uuendati edukalt."
+  county_destroyed: "Maakond on kustutatud."
+
+# LoadCategory
+  load_category: "Pinnase tüüp"
+  load_categories: "Pinnase tüübid"
+  new_load_category: "Uus Pinnase tüüp"
+  edit_load_category: "Muuda Pinnase tüüp"
+#attributes
+  name: "Nimi"
+#values
+  rubble: "Killustik"
+  asphalt: "Asfalt"
+  machined_asphalt: "Freesitud asfalt"
+  filling_ground: "Täitepinnas"
+  gardening_soil: "Haljastusmuld"
+  filling_soil: "Täitemuld"
+  constuction_sand: "Ehitusliiv"
+  filling_sand: "Täiteliiv"
+  gravel: "Kruus"
+  mill_levy: "Freesipuru"
+  other: "Muu"
+#flashes
+  load_category_created: "Uus Pinnase tüüp loodud edukalt."
+  load_category_updated: "Pinnase tüüp uuendatud edukalt."
+  load_category_destroyed: "Pinnase tüüp on kustutatud."
+
+# Kasutaja
+  user: "Kasutaja"
+  users: "Kasutajad"
+  new_user: "Uus kasutaja"
+  edit_user: "Edit User"
+#attributes
+  login: "Kasutajanimi"
+  name: "Nimi"
+  email: "E-post"
+  roles: "Roll"
+#flashes
+  user_created: "Uue kasutaja loomine õnnestus."
+  user_updated: "Kasutaja edukalt uuendatud."
+  user_destroyed: "Kasutaja on kustutatud."
+
+# Sisu
+  content: "Sisuleht"
+  contents: "Sisulehed"
+  new_content: "Uus sisuleht"
+  edit_content: "Muuda sisulehte"
+#attributes
+  static_content_id: "Keel"
+  title: "Pealkiri"
+  content: "Sisu"
+  hidden: "Varjatud"
+  position: "Positsioon"
+  comp_name: "Süsteemne nimi"
+#flashes
+  content_created: "Uus sisuleht on edukalt loodud."
+  content_updated: "Sisulehte on edukalt uuendatud."
+  content_destroyed: "Sisuleht on kustutatud."
+
+# StaticContent
+  static_content: "Staatiline sisu"
+  static_contents: "Staatiline sisu"
+  new_static_content: "Uus Staatiline sisu"
+  edit_static_content: "Muuda Staatilist sisu"
+#attributes
+  language_code: "Keele kood"
+  country_code: "Riigi Kood"
+  site_name: "Lehe Nimi"
+  site_title: "Lehe pealkiri"
+  site_email: "Lehe e-mail"
+  company_name: "Firma nimi"
+  frontpage: "Esileht"
+  meta_description: "Meta kirjeldus"
+  meta_keywords: "Meta märksõnad"
+  contacts: "Kontaktid"
+  footer: "Jalus"
+#flashes
+  static_content_created: "Uus Staatiline sisu on edukalt loodud."
+  static_content_updated: "Staatiline sisu uuendati edukalt."
+  static_content_destroyed: "Staatiline sisu on eemaldatud."
+
+##ActiveRecord
+  activerecord:
+    models:
+      load: "Koorem"
+      feedback: "Tagasiside"
+      county: "Maakond"
+      load_category: "Pinnase tüüp"
+      user: "Kasutaja"
+      content: "Sisu"
+      static_content: "Staatiline sisu"
+      comment: "Kommentaar"
+      user: "Kasutaja"
+    attributes:
+      load:
+        ad_type: "Kuulutuse tüüp"
+        load_category_id: "Pinnase tüübi id"
+        amount: "Summa"
+        county_id: "Maakond"
+        location: "Asukoht"
+        info: "Lisainfo"
+        state: "riik"
+        name: "Nimi"
+        email: "E-post"
+        phone: "Telefon"
+      feedback:
+        load_id: "Koorem"
+        contact_name: "Nimi"
+        contact_phone: "Telefon"
+        contact_email: "email"
+        load_id: "Koorem"
+        message: "Teade"
+        reviewed: "Vaadatud"
+      county:
+        name: "Nimi"
+      load_category:
+        name: "Nimi"
+      user:
+        login: "Kasutajanimi"
+        name: "Nimi"
+        email: "E-post"
+        roles: "rollid"
+      content:
+        static_content_id: "Staatiline sisu"
+        title: "Pealkiri"
+        content: "Sisu"
+        hidden: "Varjatud"
+        position: "Asukoht"
+      static_content:
+        language_code: "Keele kood"
+        country_code: "Riigi Kood"
+        site_name: "Site Name"
+        site_title: "Lehe pealkiri"
+        site_email: "Lehe e-mail"
+        company_name: "Firma nimi"
+        frontpage: "Esileht"
+        meta_description: "Meta kirjeldus"
+        meta_keywords: "Meta märksõnad"
+        contacts: "Kontaktid"
+        footer: "jalus"
+      comment:
+        commentable_id: "Kommenteeritav"
+        commentable_type: "Kommenteeritava tüüp"
+        user_name: "Kasutajanimi"
+        user_ip: "Kasutaja IP"
+        content: "Sisu"
+      user:
+        username: "Kasutajanimi"
+        email: "E-post"
+        password: "Parool"
+    errors:
+      template:
+        header:
+          one: "Üks viga takistas, et {{model}} salvestada"
+          other: "{{count}} viga takistasid, et {{model}} salvestada"
+        body: "Palun vaadake järgnevad andmed üle:"
+      format: "{{attribute}} {{message}}"
+      messages:
+        inclusion: "ei ole olemas"
+        exclusion: "on reserveeritud"
+        invalid: "on vigane"
+        confirmation: "ei sobi"
+        accepted : "peab olema kinnitatud"
+        empty: "ei tohi tühi olla"
+        blank: "peab olema täidetud"
+        too_long: "on liiga pikk (maksimum on {{count}} tähte)"
+        too_short: "on liiga lühike (miinimum on {{count}} tähte)"
+        wrong_length: "pikkus on vale (peab olema {{count}} tähte)"
+        taken: "on juba valitud"
+        not_a_number: "ei ole number"
+        greater_than: "peab olema suurem kui {{count}}"
+        greater_than_or_equal_to: "peab olema suurem või sama suur kui {{count}}"
+        equal_to: "peab võrduma"
+        less_than: "peab olema väiksem kui {{count}}"
+        less_than_or_equal_to: "peab olema väiksem või sama suur kui {{count}}"
+        odd: "peab olema paaritu arv"
+        even: "peab olema paaris arv"
+        record_invalid: "Viga tekkis: {{errors}}"
+        look_like_email: "peab olema e-mailiaadressi kujul"
+
+##Kuupäeva ja aja vorming
+  date:
+    formats:
+      default: "%B %d, %Y"
+
+    day_names: [pühapäev, esmaspäev, teisipäev, kolmapäev, neljapäev, reede, laupäev]
+    standalone_day_names: [Pühapäev, Esmaspäev, Teisipäev, Kolmapäev, Neljapäev, Reede, Laupäev]
+    abbr_day_names: [P, E, T, K, N, R, L]
+
+    month_names: [~, Jaanuar, Veebruar, Märts, Aprill, Mai, Juuni, Juuli, August, September, Oktoober, November, Detsember]
+    standalone_month_names: [~, Jaanuar, Veebruar, Märts, Aprill, Mai, Juuni, Juuli, August, September, Oktoober, November, Detsember]
+    abbr_month_names: [~, Jaan., veebr., märts, aprill, mai, juuni, juuli, august, september, okt., november, dets.]
+    standalone_abbr_month_names: [~, Jaan., veebr., märts, aprill, mai, juuni, juuli, august, september, okt., november, dets.]
+
+    order: [ :day, :month, :year ]
+
+  time:
+    formats:
+      default: "%B %d, %Y - %H:%M"
+    am: "Enne lõunat"
+    pm: "Pärast lõunat"
+
+  number:
+    format:
+      separator: ","
+      delimiter: ""
+      precision: 2
+
+    Currency:
+      format:
+        format: "% n% u"
+        unit: "kr"
+        separator: ","
+        delimiter: ""
+        precision: 2
+
+    percentage:
+      format:
+        delimiter: ""
+
+    precision:
+      format:
+        delimiter: ""
+
+    human:
+      format:
+        delimiter: ""
+        precision: 1
+      storage_units: [söödaks, KB, MB, GB, TB]
+
+  datetime:
+    distance_in_words:
+      half_a_minute: "bassein minutit"
+      less_than_x_seconds:
+        one: "Vähem OTS ((arv)) sekund"
+        other: "Vähem OTS ((arv)) sekundit"
+      x_seconds:
+        one: "((arv)) sekund"
+        other: "((arv)) sekundit"
+      less_than_x_minutes:
+        one: "Vähem OTS ((arv)) minut"
+        other: "Vähem OTS ((arv)) minutit"
+      x_minutes:
+        one: "((arv)) minut"
+        other: "((arv)) minutit"
+      about_x_hours:
+        one: "umbes ((arv)) tund"
+        other: "umbes ((arv)) tundi"
+      x_days:
+        one: "((arv)) päev"
+        other: "((arv)) päeva"
+      about_x_months:
+        one: "umbes ((arv)) kuu"
+        other: "umbes ((arv)) kuud"
+      x_months:
+        one: "((arv)) kuu"
+        other: "((arv)) kuud"
+      about_x_years:
+        one: "umbes ((arv)) aasta"
+        other: "umbes ((arv)) aastat"
+      over_x_years:
+        one: "üle ((arv)) aasta"
+        other: "üle ((arv)) aastat"
+    prompts:
+      year: "aasta"
+      month: "Kuu"
+      day: "Päev"
+      hour: "Tunde"
+      minute: "minutit"
+      second: "Sekundit"
+
+  support:
+    array:
+      # Rails 2,2
+      sentence_connector: "ja"
+      #skip_last_comma: True
+
+      # Rails 2,3
+      words_connector: ","
+      two_words_connector: "ja"
+      last_word_connector: "ja"

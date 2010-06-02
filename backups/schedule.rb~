@@ -1,0 +1,9 @@
+every 1.days, :at => '2:30am' do
+  rake "thinking_sphinx:conf"
+  rake "thinking_sphinx:rebuild"
+end
+
+every :reboot do
+  rake "thinking_sphinx:index"
+  rake "thinking_sphinx:start"
+end

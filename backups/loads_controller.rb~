@@ -1,0 +1,65 @@
+class LoadsController < ApplicationController
+
+  filter_resource_access :additional_collection => [:admin, :publish]
+
+  def publish
+    Load.find(params[:id]).publish!
+
+    flash[:notice] = t(:load_updated)
+    redirect_to admin_loads_path
+  end
+
+  def close
+    Load.find(params[:id]).close!
+
+    flash[:notice] = t(:load_updated)
+    redirect_to admin_loads_path
+  end
+
+  def admin
+    @loads = Load.with_permissions_to(:manage).admin(paginate_options)
+  end
+  
+  def index
+    @offers = Load.live.offers
+    @requests = Load.live.requests
+  end
+  
+  def show
+    @load.increment!(:statistics_total)
+    Statistic.unique(@load.id, params[:controller], request.remote_ip)
+  end
+  
+  def new
+  end
+  
+  def create
+    if @load.save
+      Mailer.deliver_load(@load, @locale_content.site_email)
+
+      flash[:notice] = t(:load_created)
+      redirect_to @load
+    else
+      render :action => 'new'
+    end
+  end
+  
+  def edit
+  end
+  
+  def update
+    if @load.update_attributes(params[:load])
+      flash[:notice] = t(:load_updated)
+      redirect_to @load
+    else
+      render :action => 'edit'
+    end
+  end
+  
+  def destroy
+    @load.destroy
+
+    flash[:notice] = t(:load_destroyed)
+    redirect_to admin_loads_path
+  end
+end

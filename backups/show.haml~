@@ -1,0 +1,3 @@
+- content_for :content_header do
+  = "Baaaa" #raw @page.content_header 
+= raw @page.content

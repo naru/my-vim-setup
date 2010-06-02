@@ -1,0 +1,67 @@
+Feature: Manage Load
+  In order to optimize transport operations
+  guests should be able to list and add new loads.
+
+  Scenario: Loads list
+    Given there is a "offer" load in the category "filling_soil" which has the state "live"
+    When I go to the list of loads
+    Then I should see "Offer"
+    And I should see "Request"
+    And show me the page
+    And I should see "Filling soil" within ".ad_item"
+
+  Scenario: Adding a valid load
+    Given I am not logged in
+    And I am on the new load page
+    When I fill in the following:
+      | load_name     | Mullast Mees             |
+      | load_email    | mullast_mees@pinnas24.ee |
+      | load_phone    | 56 174 332               |
+      | load_amount   | 2 tonni                  |
+      | load_location | Ahti                     |
+      | load_info     | Ei kommenteeri           |
+    And I select "Gardening soil" from "load_load_category_id"
+    And I select "Harjumaa" from "load_county_id"
+    And I press "load_submit"
+    Then I should see "New Load was created successfully."
+    And I should have 1 loads
+
+  Scenario: Adding an invalid load
+    Given I am not logged in
+    And I am on the new load page
+    And I press "load_submit"
+    Then I should see "New Load"
+    And no load should be created
+
+  Scenario: Activating a load
+    Given I am logged in as admin
+    And there is a "offer" load in the category "Muld" which has the state "pending"
+    When I go to the admin loads page
+    And I follow "Publish"
+    Then I should see "The Load was updated successfully."
+    And the latest updated load should have the state "live"
+    
+  Scenario: Closing a load
+    Given I am logged in as admin
+    And there is a "offer" load in the category "Muld" which has the state "pending"
+    When I go to the admin loads page
+    And I follow "Close"
+    Then I should see "The Load was updated successfully."
+    And the latest updated load should have the state "closed"
+    
+
+  Scenario: Re-opening a load
+    Given I am logged in as admin
+    And there is a "offer" load in the category "Muld" which has the state "closed"
+    When I go to the admin loads page
+    And I follow "Publish"
+    Then I should see "The Load was updated successfully."
+    And the latest updated load should have the state "live"
+
+  Scenario: Destroy a load
+    Given I am logged in as admin
+    And there is a load named "Load of crap"
+    And I am on the load "Load of crap" page
+    When I follow "Delete"
+    Then I should see "The Load has been deleted."
+    And there should not be a load named "Donkey Kong"

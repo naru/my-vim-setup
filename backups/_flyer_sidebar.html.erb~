@@ -1,0 +1,14 @@
+<div class="sidebar_flyer">
+  <div class="sidebar_flyer_pic">
+    <%= link_to(image_tag(flyer.image.url(:thumb_side)), flyer_path(flyer), :title => flyer.event) %>
+  </div>
+  <b>
+  <% if flyer.today %>
+    Täna
+  <% else %>
+    <%= good_date(flyer) %>
+  <% end %>
+  </b>
+  <h2><%=  link_to("#{flyer.event_venue}", flyers_path(:venue => flyer.venue)) %></h2>
+  <b><%= link_to(flyer.event, flyer_path(flyer)) %></b>
+</div>

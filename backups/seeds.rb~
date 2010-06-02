@@ -1,0 +1,28 @@
+User.new(
+  :login => 'admin',
+  :email => 'admin@domain.com',
+  :password => 'secret',
+  :password_confirmation => 'secret'
+).save
+
+Page.new(
+  :language_id => 1,
+  :name => 'Home',
+  :comp_name => '',
+  :content => '<p>Welcome!</p>',
+  :hidden => false,
+  :position => 1
+).save
+
+Language.new(
+  :page_id => 1,
+  :language_code => 'en',
+  :country_code => 'GB',
+  :site_name => 'Empire Logistic',
+  :site_email => 'support@wdefineit.com',
+  :company_name => 'Empire Logistic',
+  :meta_description => '',
+  :meta_keywords => '',
+  :contacts => '',
+  :footer => ''
+).save

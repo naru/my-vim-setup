@@ -1,0 +1,27 @@
+class StaticContent < ActiveRecord::Base
+
+  has_many :article_categories
+  has_many :article_sections
+  has_many :articles, :through => :article_sections
+  has_many :gallup_types
+  has_many :gallups, :through => :gallup_types
+  has_many :users
+  has_many :content_sections
+  has_many :contents, :through => :content_sections
+  has_many :stories
+  has_many :people
+  
+  validates_presence_of :language_code, :country_code, :site_name, :site_title, :site_email, :company_name
+
+  after_save :clear_cache
+
+  def clear_cache
+    Rails.cache.delete("static_content_#{self.language_code}")
+  end
+
+  def self.admin(page, sort, order)
+  paginate :per_page => 100, :page => page,
+           :order => "#{sort || 'created_at'} #{order || 'asc'}"
+  end
+
+end

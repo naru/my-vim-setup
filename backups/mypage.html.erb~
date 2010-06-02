@@ -1,0 +1,40 @@
+<h1><%= t(:my_flyers) %></h1>
+<table class="list">
+  <tr>
+    <th><%= t :flyer %></th>
+    <th><%= t :event %></th>
+    <th><%= t :when %></th>
+    <th><%= t :venue %></th>
+    <th><%= t :state %></th>
+    <th><%= t :displays %>*</th>
+    <th><%= t :clicks %> (unik./kokku)</th>
+    <th><%= t :options %></th>
+  </tr>
+
+<% @flyers.each do |flyer| %>
+  <tr>
+    <td><%=link_to(image_tag(flyer.image.url(:mini)), flyer_path(flyer), :title => flyer.event) %></td>
+    <td><%=h flyer.event %></td>
+    <td><%= good_date(flyer) %></td>
+    <td><%=h flyer.event_venue %></td>
+    <td><%=h flyer.state %></td>
+    <td style="text-align: center; font-weight: bold;"><%= flyer.display_count %></td>
+    <td style="text-align: center; font-weight: bold;"><%= flyer.flyer_statistics_count %> / <%= flyer.flyer_statistics_total %></td>
+    <td>
+        <%= link_to t(:view), flyer %>
+        <%= link_to t(:edit), edit_flyer_path(flyer) %>
+        <%= link_to t(:destroy), flyer, :confirm => t(:are_you_sure), :method => :delete %>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<div style="text-align:right; color:#999;">
+*<%= note("Flaieri kuvamised esilehel ja paremas tulbas. (alates 18.03)") %>
+</div>
+<br />
+<br />
+
+<b><%= link_to t(:add_flyer), new_flyer_path, :style => "font-size:16px;"%></b>
+
+<%= will_paginate @flyers %>

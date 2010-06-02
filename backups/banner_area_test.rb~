@@ -1,0 +1,60 @@
+require 'test_helper'
+
+class BannerAreaTest < ActiveSupport::TestCase
+
+  should_have_many :banner_campaigns
+  should_have_many :banners, :through => :banner_campaigns
+
+  should_validate_presence_of :name, :comp_name
+
+  should "be valid" do
+    assert_valid Factory.build(:banner_area)
+  end
+
+  context "live named scope outcome" do
+    setup do
+      @banner_area = Factory(:banner_area)
+      Factory(:banner_campaign, :banner_area => @banner_area)
+      @banner_area2 = Factory(:banner_area)
+      Factory(:banner_campaign, :banner_area => @banner_area2)
+      @banner_area3 = Factory(:banner_area)
+      Factory(:banner_campaign, :banner_area => @banner_area3)
+      @banner_area4 = Factory(:banner_area)
+      Factory(:banner_campaign, :banner_area => @banner_area4, :live_at => Time.now + 1.day)
+      @banner_area5 = Factory(:banner_area)
+      Factory(:banner_campaign, :banner_area => @banner_area5, :live_at => Time.now - 4.days, :dead_at => Time.now - 2.days)
+      @banner_area6 = Factory(:banner_area)
+      Factory(:banner_campaign, :banner_area => @banner_area6, :live_at => Time.now)
+    end
+
+    should "return banner_areas which have live banners" do
+      assert_equal [@banner_area, @banner_area2, @banner_area3, @banner_area6], BannerArea.live
+    end
+  end
+
+  context "random banner" do
+    setup do
+      @banner_area = Factory(:banner_area)
+#--------------------------------------------------
+#       @campaign = Factory(:banner_campaign, :banner_area => @banner_area)
+#       @campaign2 = Factory(:banner_campaign, :banner_area => @banner_area)
+#       @campaign3 = Factory(:banner_campaign, :banner_area => @banner_area)
+#-------------------------------------------------- 
+      @campaign4 = Factory(:banner_campaign, :live_at => Time.now, :banner_area => @banner_area)
+    end
+
+    should "give back one of them" do
+      assert_kind_of BannerCampaign, @banner_area.random_banner
+      assert_contains [@campaign, @campaign2, @campaign3], @banner_area.random_banner
+    end
+  end
+
+  context "self.admin" do
+    setup { @banner_areas = BannerArea.admin(nil,nil,nil) }
+
+    should "have results" do
+      assert_not_nil(@banner_areas.size)
+    end
+  end
+
+end

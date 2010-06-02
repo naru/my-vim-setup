@@ -1,0 +1,23 @@
+Given /^there are no pages$/ do
+  Page.delete_all
+end
+
+Given /^there are following pages:$/ do |pages|
+  Page.create!(pages.hashes)
+  puts Language.all.inspect
+  puts Page.all.inspect
+end
+
+When /^I delete the (\d+)(?:st|nd|rd|th) page from "([^\"]*)"$/ do |pos, lang|
+  visit cms_path
+  save_and_open_page
+  within("table##{lang} tr:nth-child(#{pos.to_i})") do
+    click_link "Destroy"
+  end
+  puts Page.all.inspect
+end
+
+Then /^I should see the following pages:$/ do |expected_pages_table|
+  expected_pages_table.diff!(tableish('table tr', 'td,th'))
+  save_and_open_page
+end

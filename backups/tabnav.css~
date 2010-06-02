@@ -1,0 +1,46 @@
+main_tabnav, admin_tabnav {
+}
+
+div.main_tabnav {
+  margin-top:10px;
+  margin-left:10px;
+}
+
+.main_tabnav ul, .admin_tabnav ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.main_tabnav li, .admin_tabnav li {
+  float: left;
+}
+
+.main_tabnav li:hover, .admin_tabnav li:hover {
+}
+
+.main_tabnav li.active, .admin_tabnav li.active {
+}
+
+.main_tabnav a, .admin_tabnav a {
+  color: #000;
+  font-family: Verdana, Verdana, Geneva, sans-serif;
+  font-size: 18px;
+  padding: 5px;
+  text-decoration: none;
+}
+
+.admin_tabnav a {
+  border: 1px solid #222;
+  margin: 2px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+
+.main_tabnav a:hover, .admin_tabnav a:hover {
+  color: #222;
+}
+
+.main_tabnav a.active, .admin_tabnav a.active {
+  font-weight: bold;
+}

@@ -1,0 +1,22 @@
+# Hijack rails initializer to load the bundler gem environment before loading the rails environment.
+#Rails::Initializer.module_eval do
+#  alias load_environment_without_bundler load_environment
+#
+#  def load_environment
+#    Bundler.require_env configuration.environment
+#    load_environment_without_bundler
+#  end
+#end
+#
+#Rails::VendorGemSourceIndex.silence_spec_warnings = true
+
+config.cache_classes = true
+
+config.whiny_nils = true
+
+config.action_controller.consider_all_requests_local = true
+config.action_view.debug_rjs                         = true
+config.action_controller.perform_caching             = false
+
+config.action_mailer.raise_delivery_errors = true
+config.action_mailer.default_url_options = { :host => "localhost:8080" }

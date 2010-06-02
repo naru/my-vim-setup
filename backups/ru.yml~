@@ -1,0 +1,125 @@
+ru: 
+  en: "Английский" 
+  ru: "Русский" 
+  new: "Новый" 
+  show: "Показать" 
+  edit: "Изменить" 
+  delete: "Удалить" 
+  are_you_sure: "Вы уверены?" 
+  pository: "Да" 
+  negatory: "Нет" 
+  options: "Options" 
+  cms: "CMS" 
+  drag: "тянуть" 
+  log_out: "Выход" 
+  partners: "Партнеры" 
+  header_slogan: "Таможенное <br /> оформление <br/> Транспортировка <br/> Складирование" 
+  compulsory_fields: "обязательное поле" 
+  close: "Закрыть" 
+  empire_moscow: "Эмпайр, Москва" 
+  save: "Сохранить"
+  send: "Отправить"
+  news_ucase: "НОВОСТИ"
+
+  # Language 
+  language: "Язык" 
+  languages: "Языки" 
+  new_language: "Новый язык" 
+  edit_language: "Изменить язык" 
+  page_id: "Главная" 
+  language_code: "Язык" 
+  country_code: "код страны" 
+  site_name: "Название сайта" 
+  site_email: "E-почта" 
+  company_name: "Название компании" 
+  meta_description: "Meta Описание" 
+  meta_keywords: "Meta Ключевые слова"  
+  contacts: "Контакты" 
+  footer: "Footer" 
+
+  # Page
+  page: "Страница" 
+  pages: "Страницы" 
+  new_page: "Новая страница" 
+  edit_page: "Изменить страницу" 
+  language_id: "Язык" 
+  name: "Имя" 
+  comp_name: "Компьютеризированная имя" 
+  content_header: "Заголовок состава" 
+  content: "Состав" 
+  hidden: "Скрытый" 
+  position: "Позиция" 
+  statistics_count: "Клики" 
+
+  # Статьи 
+  article: "Статья" 
+  articles: "Статьи" 
+  new_article: "Новая статья" 
+  edit_article: "Изменение статьи" 
+  news: "Новости" 
+  news_archive: "Архив новостей" 
+  read_more: "Подробнее" 
+  headline: "Заголовок" 
+  published_at: "опубликована в" 
+
+  # Обратная связь 
+  contacts: "Контакты" 
+  feedback: "Обратная связь" 
+  contact_name: "Имя" 
+  contact_email: "Электронная почта" 
+  contact_phone: "Телефон" 
+  subject: "Тема" 
+  message: "Сообщение" 
+
+  # Common 
+  created_at: "Создан" 
+  updated_at: "Обновление" 
+
+  flashes: 
+    created: "был успешно создан." 
+    updated: "были успешно обновлены." 
+    deleted: "был успешно удален." 
+    submitted: "была успешно отправлена." 
+
+  date:
+    abbr_day_names: [Вск, Пнд, Втр, Срд, "Чтв", Птн, Суб]
+    abbr_month_names: [~, Янв, Фев, Мар, Апр, Май, Июн, Июл, Авг, Сен, Окт, Ноя, Дек]
+    day_names: [Воскресенье, Понедельник, Вторник, Среда, Четверг, Пятница, Суббота]
+    formats:
+      default: "%D-%M-%Y"
+      long: "%B %e, %Y"
+      only_day: "%e"
+      short: "%e %b"
+    month_names: [~, Января, Февраля, Марта, Апреля, Мая, Июня, Июля, Августа, Сентября, Октября, Ноября, Декабря]
+    order: [ :day, :month, :year ]
+
+  time:
+    formats:
+      default: "%a %b %d %H:%M:%S %Z %Y"
+      datetime:
+        formats:
+          default: "%Y-%m-%dT%H:%M:%S%Z"
+      long: "%d %B %Y %H:%M"
+      only_second: "%S"
+      short: "%d %b %H:%M"
+      time: "%H:%M"
+      timestamp: "%d %B %Y в %H:%M"
+    pm: "pm"
+    am: "am"
+  timestamp:
+    at: ""
+    by: "пользователем"
+    last_updated: "Обновлено"
+
+  activerecord:
+    errors:
+      template:
+        header:
+          one: "1 ошибка запрещают такую {{model}} от записи"
+          other: "{{count}} оценок ошибки запрещают такую {{model}} от записи"
+        body: "Были проблемы со следующими полями:"
+    models:
+      page: "Страница"
+      language: "Язык"
+      article: "Статья"
+      feedback: "Обратная связь"

@@ -1,0 +1,49 @@
+
+class Vortex < ActiveRecord::Base
+
+  has_many :vortex_stories
+  
+  Delegate = ['url', 'image_url', 'name', 'address', 'description', 'lon', 'lat', 'country_id', 'city_id', 'country_name', 'city_name']
+  belongs_to :vortex_revision    
+  Delegate.each do |d|
+    eval("delegate :#{d}, :#{d}=, :#{d}_before_type_cast, :to => :vortex_revision")
+  end
+  
+  delegate :country, :city, :to => :vortex_revision
+  
+  attr_accessor :distance
+  
+  def <=>(vortex) # Comparison operator for sorting
+    @distance <=> vortex.distance
+  end
+  
+  def vortex_revision_new
+    vortex_revision_old ? vortex_revision_old : VortexRevision.new
+  end
+  
+  alias_method :vortex_revision_old, :vortex_revision
+  alias_method :vortex_revision, :vortex_revision_new
+  
+  before_save do |v|
+    atr = {}
+    Delegate.each {|d| instance_eval("atr[:#{d}] = v.#{d}") } 
+    n = VortexRevision.create(atr)
+    v.vortex_revision = n
+  end
+
+  def self.api_initial_data
+    vortices = all
+    array = vortices.collect do |v| 
+      [v.rate || -1, 
+       v.lat,
+       v.lon,
+       v.id,
+       v.name.prepare_for_string_array.html_strip,
+       v.address.prepare_for_string_array.html_strip,
+       v.description.prepare_for_string_array.html_strip,
+       v.image_url]
+    end
+    "[\"#{array.flatten.join("\", \"")}\"]"
+  end
+  
+end

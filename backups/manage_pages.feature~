@@ -1,0 +1,32 @@
+Feature: Manage pages
+  In order to manage pages
+  admin
+  wants to be able to create, update and delete pages
+  
+  Scenario: Register new page
+    Given I am logged in as admin
+    And I am on the new page page
+    When I select "GB" from "page_language_id"
+    And I fill in "page_name" with "Frontpage"
+    And I fill in "page_content" with "<p>Welcome!</p>"
+    And I uncheck "page_hidden"
+    And I press "page_submit"
+    Then I should see "Frontpage"
+    And I should see "Welcome!"
+
+  Scenario: Delete page
+    Given I am logged in as admin
+    And there are no pages
+    And there are following pages:
+      |language_id|name|content|hidden|
+      |1|name 1|content 1|false|
+      |1|name 2|content 2|true|
+      |1|name 3|content 3|false|
+      |1|name 4|content 4|true|
+    When I delete the 3rd page from "en"
+    Then I should see the following pages:
+      |Name|Hidden|
+      |name 1|No|
+      |name 2|Yes|
+      |name 3|No|
+ 

@@ -1,0 +1,37 @@
+class FeedbacksController < ApplicationController
+
+  before_filter :authenticate_user!, :except => [:new, :create]
+
+  def admin
+    @feedbacks = Feedback.all :order => 'created_at desc'
+  end
+  
+  def show
+    @feedback = Feedback.find(params[:id])
+    @feedback.update_attribute(:reviewed, true)
+  end
+  
+  def new
+    @feedback = Feedback.new
+  end
+  
+  def create
+    @feedback = Feedback.new(params[:feedback])
+
+    if @feedback.save
+      Mailer.deliver_feedback(@feedback, @locale_language.site_email)
+
+      flash[:notice] = "#{t('activerecord.models.feedback')} #{t('flashes.submitted')}"
+      redirect_to new_feedback_path
+    else
+      render :action => 'new'
+    end
+  end
+  
+  def destroy
+    @feedback.destroy
+
+    flash[:notice] = "#{t('activerecord.models.feedback')} #{t('flashes.deleted')}"
+    redirect_to admin_feedbacks_path
+  end
+end

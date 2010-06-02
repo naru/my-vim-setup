@@ -1,0 +1,188 @@
+class Flyer < ActiveRecord::Base
+
+  belongs_to :user
+  belongs_to :venue
+  has_one :location, :through => :venue
+  has_many :flyer_statistics, :dependent => :destroy
+  has_many :comments, :as => :commentable, :dependent => :destroy
+  has_many :campaigns
+
+  has_attached_file :image,
+                  :styles => {
+                      :mega => "800x900>",
+                      :large => "600x800>",
+                      :medium => "350x500>",
+                      :small => "200x300>",
+                      :thumb => "210x297#",
+                      :thumb_small => "120x170#",
+                      :thumb_side => "100x142#",
+                      :mini => "40x70>" },
+                  :url  => "/images/flyers/:id/:style/:basename.:extension",
+                  :path => ":rails_root/public/images/flyers/:id/:style/:basename.:extension"
+
+  #validates_attachment_presence :photo
+  validates_attachment_size :image, :less_than => 5.megabytes
+  validates_attachment_content_type :image, :content_type => ['image/pjpeg', 'image/jpeg', 'image/jpg', 'image/gif', 'image/bmp', 'image/png']
+
+  validates_presence_of :event, :start, :venue
+
+  define_index do
+    indexes event
+    indexes info_plain
+    indexes venue.name, :as => :event_venue
+    indexes venue.location.city, :as => :event_venue_location
+    set_property :field_weights => {
+      :event => 10,
+      :event_venue    => 6,
+      :event_venue_location => 3
+    }
+    set_property :delta => true
+  end
+
+
+  default_scope :order => 'start ASC'
+
+  named_scope :filter_by_date, lambda { |from, to| {
+      :conditions => [
+        "(start <= ? OR (? IS NULL or ? = '')) AND (((start >= ? AND finish IS NULL) or (finish >= ?)) OR (? IS NULL or ?='')) AND ((hidden = ? or hidden is null) AND (removed = ? or removed is null))",
+        to, to, to, from, from, from, from, false, false
+      ],
+      #In case flyer lasts more than 3 days (cheeky longlasting multievent flyers), then it is ordered by finish date.
+      #Score ranks flyer among same day events
+      :order => '(IF( DATEDIFF( flyers.start, flyers.finish ) < -3, flyers.finish, flyers.start )) ASC , score DESC '
+    }
+  }
+
+  named_scope :find_by_city, lambda { |city| {
+      :joins => 'JOIN venues ON venues.id = flyers.venue_id JOIN locations ON locations.venue_id = venues.id',
+      :conditions => [ "locations.city = ?", city
+      ]
+    }
+  }
+
+  named_scope :random_upcoming, lambda { |current, limit| {
+      :conditions => [
+        "id <> ?",
+        current || -1
+      ],
+      :limit => limit || 5,
+      :order => 'rand()'
+    }
+  }
+
+  before_save :cleanup_html
+
+  def cleanup_html
+    self.info = self.info.html_filter_light if self.info
+  end
+
+  before_save :set_info_plain
+  
+  def set_info_plain
+    self.info_plain = self.info.html_filter if self.info
+  end
+
+  def to_param
+    "#{id}-#{event.to_url}"
+  end
+
+  class << self
+
+    def sponsored
+      campaign_flyers = Campaign.current.collect &:flyer
+      p campaign_flyers.size 
+      if campaign_flyers.size < 4
+        other_random = Flyer.random_upcoming(nil, 4 - campaign_flyers.size).filter_by_date((Time.zone.now - 3.hours).to_date, nil)
+        campaign_flyers += other_random
+      end
+      campaign_flyers
+    end
+
+    def increment_display_counts(ids)
+      unless ids.blank?
+        sql = "UPDATE flyers SET display_count = display_count + 1 WHERE flyers.id IN (#{(ids).join(',')})"
+        Flyer.connection.execute(sql)
+      end
+    end
+
+    def in_map_json_format
+      all.map &:json_format
+    end
+
+    def today_in_json
+      { :flyers => filter_by_date((Time.zone.now - 6.hours).to_date, Time.zone.now).collect &:json_format }
+    end
+
+    def this_weekend
+      filter_by_date(*this_weekend_span)
+    end
+
+    def next_weekend
+      filter_by_date(*next_weekend_span)
+    end
+
+    def this_weekend_span
+      relative_weekend_span(0)
+    end
+
+    def next_weekend_span
+      relative_weekend_span(1)
+    end
+
+    # Returns the friday and sunday dates (as an array) of the week that is in
+    # +offset+ weeks away from current date.
+    def relative_weekend_span(offset)
+      sun = (Date.today + offset.weeks).end_of_week
+      fri = sun - 2.days
+      [fri, sun]
+    end
+
+  end
+
+  def json_format
+    return {
+      :name => self.event,
+      :venue => self.venue.to_s,
+      :image => image.url(:mini),
+      :url => "/flyers/#{self.to_param}",
+      :latitude => venue.location.latitude,
+      :longitude => venue.location.longitude
+    }
+  end
+
+  def event_venue_location
+    venue.location.to_s rescue nil
+  end
+
+  def event_venue_w_location
+    location = ", #{event_venue_location}" if event_venue_location
+    venue = "#{event_venue}"
+    "#{venue}#{location}"
+  end
+
+  def event_venue
+    venue.name if venue
+  end
+
+  def event_venue=(name)
+    self.venue = Venue.find_or_create_by_name(name)
+  end
+
+  def short_info
+    "#{info_plain.split(' ').slice(0,20).join(' ')} ..." if info_plain
+  end
+
+  def today
+    self.start == (Time.zone.now - 3.hours).to_date ? 'today' : nil
+  end
+
+  def state
+    state = self.hidden ? 'peidus' : 'avalik'
+    state = self.removed ? 'lukus' : state
+  end
+  
+  def access?(current_user)
+    current_user and (current_user.has_role?(['administrator', 'superadmin']) or (self.user == current_user)) ? true : false
+  end
+
+end

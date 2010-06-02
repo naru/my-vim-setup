@@ -1,0 +1,37 @@
+-form_for(@language) do |f|
+  = f.error_messages
+  %div
+    %h3
+      = f.label t('site_name')
+    = f.text_field :site_name
+    %h3
+      = f.label t('site_email')
+    = f.text_field :site_email
+    %h3
+      = f.label t('company_name')
+    = f.text_field :company_name
+  %div
+    %h3
+      = f.label t('page_id')
+    = select_tag("language[page_id]", options_for_select(collect_instances(Page, "name"), @language.page_id))
+    %h3
+      = f.label t('language_code')
+    = select_tag("language[language_code]", options_for_select(default_languages(@language), @language.language_code))
+    %h3
+      = f.label t('country_code')
+    =select_tag("language[country_code]", options_for_select(available_countries, @language.country_code))
+  %br
+  %h3
+    = f.label t('contacts')
+  = f.text_area :contacts, :class => 'tiny_mce'
+  %h3
+    = f.label t('footer')
+  = f.text_area :footer, :class => 'tiny_mce'
+  %h3
+    = f.label t('meta_description')
+  = f.text_field :meta_description
+  %h3
+    = f.label t('meta_keywords')
+  = f.text_field :meta_keywords
+  %p
+    = f.submit t(:save)

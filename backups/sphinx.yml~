@@ -1,0 +1,9 @@
+production:
+  bin_path: '/usr/local/bin'
+  pid_file: /var/apps/flaiku/shared/pids/searchd.pid
+  searchd_files: /var/apps/flaiku/shared/db/sphinx
+  searchd_file_path: /var/apps/flaiku/shared/db/sphinx/production
+  port: 3314
+
+development:
+  port: 3311

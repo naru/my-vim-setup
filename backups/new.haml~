@@ -1,0 +1,45 @@
+    
+.contacts
+  = h1 t(:contacts)
+  %br
+  = render :partial => 'shared/geo_map'
+  .address_info
+    %h3
+      = t(:address)
+    = @locale_language.contacts 
+
+  - form_for(@feedback) do |f|
+    = f.error_messages
+    %div{ :style => "float: right;" }
+      %h3
+        = f.label t('contact_name')
+        *
+      = f.text_field :contact_name, :class => "validate['required']" 
+
+      %h3
+        = f.label t('contact_email')
+        *
+      = f.text_field :contact_email, :class => "validate['required','email']" 
+
+      %h3
+        = f.label t('contact_phone')
+      = f.text_field :contact_phone
+
+      %h3
+        = f.label t('subject')
+        *
+      = f.text_field :subject, :class => "validate['required']" 
+
+      %h3
+        = f.label t('message')
+        *
+      = f.text_area :message, :class => "validate['required']" 
+
+    %br
+    %p.subtle
+      *
+      = t('compulsory_fields')
+    %p
+      = f.submit t(:send)
+
+    %br/

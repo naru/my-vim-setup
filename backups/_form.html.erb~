@@ -1,0 +1,83 @@
+<%= render :partial => 'gallup_votes/gallup', :locals => {:gallup => @gallup, :size => 'small'} if @gallup %>
+
+<% form_for @loan, :html => {:multipart => true, :class => 'main_form'} do |f| %>
+  <%#= f.error_messages %>
+
+  <div class="block">
+    
+    <h1><%=t :pawn_product %></h1>
+
+    <h2><%=t :product_name %>*</h2>
+    <%= f.text_field :product_name %>
+
+    <h2><%=t :product_price %>*</h2>
+    <%= f.text_field :product_price %>
+
+    <h2><%=t :picture %></h2>
+    <%= f.file_field :picture, :class => "file_field" %>
+
+  </div>
+
+  <div class="block">
+
+    <h1><%=t :loan_person %></h1>
+
+    <h2><%=t :contact_name %></h2>
+    <%= f.text_field :contact_name %>
+
+    <h2><%=t :contact_email %>*</h2>
+    <%= f.text_field :contact_email %>
+
+    <h2><%=t :contact_phone %>*</h2>
+    <%= f.text_field :contact_phone %>
+
+  </div>
+
+  <br class="clear_float" />
+
+  <div class="block">
+    <h2><%=t :product_description %>*</h2>
+    <%= f.text_area :product_description, :rows => 4 %>
+  </div>
+
+  <div class="block">
+    <h2><%=t :contact_address_product %></h2>
+    <%= f.text_area :contact_address, :rows => 4 %>
+  </div>
+
+  <br class="clear_float" />
+
+  <div class="block">
+    <h2><%=t :loan_type %>*</h2>
+    <%= collection_select(:loan, :loan_type_id, LoanType.find(:all), :id, :name) %>
+  </div>
+  
+  <div class="block">
+
+    <h2><%=t :feedback_channel %></h2>
+    <%= select_tag('loan[feedback]', options_for_select([
+    [t(:feedback_email), 'E-mail'],
+    [t(:feedback_phone), 'Telefon'],
+    [t(:feedback_both), 'Mõlemad sobivad']],
+    @loan.feedback)) %>
+
+    <% if admin? %>
+      <h2>Laenu staatus*</h2>
+      <%= collection_select(:loan, :loan_status_id, LoanStatus.find(:all), :id, :name) %>
+    <% else %>
+      <%= f.hidden_field :loan_status_id, :value => 1 %>
+    <% end %>
+
+  </div>
+
+  <br class="clear_float" />
+
+  <p class="subtle">
+    *<%=t :compulsory_fields %>
+  </p>
+
+  <p>
+    <%= f.submit t(:create_loan) %>
+  </p>
+
+<% end %>

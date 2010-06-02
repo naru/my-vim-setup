@@ -1,0 +1,15 @@
+Given /^I am logged in as admin$/ do
+  Factory(:admin)
+  visit login_path
+  fill_in "user_login", :with => "admin"
+  fill_in "user_password", :with => "secret"
+  click_button "user_submit"
+end
+
+Given /^I am not logged in$/ do
+  visit destroy_user_session_path
+end
+
+Given /^there is a user with login "([^\"]*)" and password "([^\"]*)"$/ do |login, password|
+  Factory(:user, :login => login, :password => password, :password_confirmation => password)
+end

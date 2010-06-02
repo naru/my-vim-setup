@@ -1,0 +1,24 @@
+class String
+
+  def clean_for_string_array
+   self.gsub("\n","").gsub("\r","").gsub("\"", "''") 
+  end
+
+  def html_filter(allowed = ['br','i','b','strong','u','ul','li'])
+    re = if allowed.any?
+      Regexp.new(
+        %(<(?!(\\s|\\/)*(#{
+          allowed.map {|tag| Regexp.escape( tag )}.join( "|" )
+        })( |>|\\/|'|"|<|\\s*\\z))[^>]*(>+|\\s*\\z)),
+        Regexp::IGNORECASE | Regexp::MULTILINE, 'u'
+      )
+    else
+      /<[^>]*(>+|\s*\z)/m
+    end
+    gsub(re,'')
+  end
+
+  def nl2br
+    self.gsub(/\n/, '<br>')
+  end  
+end

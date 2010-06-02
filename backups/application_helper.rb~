@@ -1,0 +1,58 @@
+module ApplicationHelper
+
+  def default_languages(current)
+    langs = [['en', 'en'],['ru', 'ru']]
+
+    conditions = ["id <> ?", current.id] if current && current.id 
+    used_langs = Language.find(:all, :select => "language_code", :conditions => conditions).collect {|i| [i.language_code, i.language_code]}
+
+    langs-used_langs
+  end
+
+  def h1(content)
+    content_for :site_title, content
+    "<h1>#{content}</h1>"
+  end
+
+  def locale_content(locale_language)
+    if locale_language
+      content_for :language, "#{locale_language.language_code}-#{locale_language.country_code}"
+      content_for :company_name, locale_language.company_name
+      content_for :site_name, locale_language.site_name
+      content_for :site_email, locale_language.site_email
+      content_for :meta_description, locale_language.meta_description
+      content_for :meta_keywords, locale_language.meta_keywords
+      content_for :contacts, locale_language.contacts
+      content_for :footer, locale_language.footer
+      content_for :slogan, locale_language.slogan
+    end
+  end
+
+  def collect_instances(model, attribute)
+    model.all.collect{|i| [i.send(attribute), i.id]}
+  end
+
+  def meta_tag(name, value, http_equiv = false)
+    return nil if value.blank?
+    http_equiv = true if %w{expires pragma content-type content-script-type content-style-type default-style refresh window-target cache-control vary}.include? name
+    return tag(:meta, :name => name, :content => value) unless http_equiv
+    tag :meta, :"http-equiv" => name, :content => value
+  end
+
+  def form?
+    request.path_parameters["action"] == "new" or request.path_parameters["action"] == "edit"
+  end
+
+  def available_countries
+    [['RU', 'RU'],['GB', 'GB']]
+  end
+
+  def site_languages
+    Language.find :all, :select => 'language_code, id', :group => 'language_code, id', :order => 'ID asc'
+  end
+
+  def google_analytics_key
+    nil
+  end
+
+end

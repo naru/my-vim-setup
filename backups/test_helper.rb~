@@ -1,0 +1,15 @@
+system "rake db:test:prepare"
+ENV["RAILS_ENV"] = "test"
+require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+require 'test_help'
+
+class ActionController::TestCase
+  include Devise::TestHelpers
+
+  def sign_in_admin
+    sign_in Factory(:admin)
+  end
+end
+
+
+

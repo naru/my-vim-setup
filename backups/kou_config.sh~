@@ -1,0 +1,52 @@
+#!/bin/bash
+export PREFIX=/usr/share/kou
+if [ -f /etc/ppp/peers/kou ]; then
+	kdialog --yesno "Abiline leidis olemasoleva seadistuse. Kas soovite taastada eelneva seadistuse?"
+	if [ $? -eq 0 ]; then
+	    kdesu $PREFIX/restore.sh
+    	    kdialog --msgbox "Eelnev seadistus taastatud"
+	    exit 0
+	fi
+fi
+
+kdialog --msgbox "Palun ühendage arvuti külge Kõu mobiilne seade. Abiline püüab tuvastada seadme et saaks jätkata seadistamist."
+
+limit=20
+
+dcopRef=$(kdialog --geometry 400x100 --title "Kõu seadistus" --progressbar "Otsin Kõu võrguseadet" $limit)
+dcop $dcopRef setLabel "Otsin Kõu võrguseadet"
+
+result=1
+i=0
+while [ ! -c /dev/kou ] && [ $i -le $limit ]; do
+        dcop $dcopRef setProgress $i
+	if [ -c /dev/kou ]; then
+	        dcop $dcopRef setProgress $limit
+	       	dcop $dcopRef setLabel "Kõu seade leitud"
+	fi
+	sleep 1
+	i=$(($i+1))
+done
+
+dcop $dcopRef close
+
+
+if [ -c /dev/kou ]; then
+	username=$(kdialog --title "Kasutajanimi" --inputbox \
+		"Palun sisestage kasutajanimi (ESN) millega Kõu võrku sisse logida." "ESN00000")
+	if [ $? -ne 0 ]; then
+		kdialog --title "Esines viga" --error "Kõu võrgu seadistamine katkestatud."
+		exit 1;
+	fi
+
+	kdesu -n $PREFIX/write_kou.sh $username
+	if [ $? -ne 0 ]; then
+		kdialog --title "Esines viga" --error "Kõu võrgu seadistamine katkestatud."
+		exit 1;
+	else
+		kdialog --title "Rõõmusõnum" --msgbox "Kõu võrk on seadistatud. Ühendamiseks või lahti ühendamiseks klõpsake töölaual asuvale ikoonile."
+	fi
+else
+	kdialog --title "Esines viga" --sorry "Abiline ei leidnud Teie Kõu võrguseadet. Kui olete kindel et kõik on ühendatud, siis on viga tõenäoliselt abilises. Palun andke teada vigadest Estobuntu tiimile."
+	exit 1
+fi

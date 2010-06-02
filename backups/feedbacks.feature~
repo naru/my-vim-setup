@@ -1,0 +1,37 @@
+Feature: Manage Feedbacks
+  In order to get feedback on loads,
+  guests should be able to create feedbacks.
+
+  Scenario: Admin feedbacks
+    Given I am logged in as admin
+    And there is a feedback named "Donkey Kong"
+    And I am on the admin feedbacks page
+    And I should see "Donkey Kong"
+
+  Scenario: Show a feedback
+    Given I am logged in as admin
+    And there is a feedback named "Donkey Kong"
+    And I am on the feedback "Donkey Kong" page
+    And I should see "Donkey Kong"
+
+  Scenario: Create a feedback
+    Given I am not logged in
+    And there is a load named "Load of crap"
+    And I am on the load "Load of crap" page
+    When I fill in the following:
+      | Contact Name     | Donkey Kong              |
+      | Contact Email    | donkey@kong.com          |
+      | Contact Phone    | 666                      |
+      | Message          | I have to have it!       |
+    And I press "Submit"
+    Then I should see "New Feedback was created successfully."
+    And there should be 1 feedback
+
+  Scenario: Destroy a feedback
+    Given I am logged in as admin
+    And there is a feedback named "Donkey Kong"
+    And I am on the feedback "Donkey Kong" page
+    Then I should see "Donkey Kong"
+    When I follow "Delete"
+    Then I should see "The Feedback has been deleted."
+    And there should not be a feedback named "Donkey Kong"

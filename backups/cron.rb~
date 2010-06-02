@@ -1,0 +1,7 @@
+#--------------------------------------------------
+# task :cron => :environment do
+#   puts "Getting vortices..."
+#   Spider::Request.save_to_db
+#   puts "done."
+# end
+#-------------------------------------------------- 

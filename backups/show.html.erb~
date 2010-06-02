@@ -1,0 +1,59 @@
+<% title("#{h @flyer.event} - #{good_date(@flyer)} @ #{h @flyer.event_venue}") %>
+<% description("#{h @flyer.short_info}") %>
+<% content_for :head do %>
+  <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+<% end %>
+
+<div class="float_half">
+  <%= quickbox_link @flyer.image, "medium", @flyer.event %><br/>
+  <% if @flyer.venue and @flyer.venue.location.postal_code %>
+    <h4> <%= @flyer.venue %></h4>
+    <div class="flyer_map"></div>
+    <script type="text/javascript" src="http://www.google.com/jsapi?key=<%= GMAP_API_KEY %>"></script>
+  <% end %>
+</div>
+<div class="float_text">
+    <%= tweet_this("#{@flyer.event.convert_misc_characters} - #{tiny_url(flyer_url(@flyer)) if RAILS_ENV == 'production'}") %>
+    <%= link_to( %Q{<span class="print_button"><span class="print_text">Prindi flaier</span></span>}, print_flyers_path(:flyer => @flyer.id), :class => "popup_link") %>
+    <iframe src="http://www.facebook.com/widgets/like.php?href=<%= flyer_url(@flyer) %>&amp;colorscheme=dark" scrolling="no" frameborder="0" style="border:none; width:450px; height:30px; color: #fff; margin: 10px 0px 0px 0px;"></iframe>
+<% if admin %>
+  <p>
+    <%= link_to image_tag('icons/edit.png'), edit_flyer_path(@flyer) %>
+  </p>
+<% end %>
+<p>
+  <h1><%=h @flyer.event %></h1>
+</p>
+<p>
+  <h4><%= good_date(@flyer) %></h4>
+</p>
+<p>
+<h4>@ <%=  link_to("#{@flyer.event_venue_w_location}", flyers_path(:venue => @flyer.venue)) %></h4>
+</p>
+
+<p>
+  <b><%=h @flyer.ticket %></b>
+</p>
+
+<p>
+  <%= @flyer.info %>
+</p>
+
+<div class="comments">
+  <%= render :partial => "comments/list" %>
+  <%= render :partial => "comments/form", :locals => { :commentable => @flyer } %>
+</div>
+
+</div>
+
+<br />
+
+
+
+<% content_for :sidebar do %>
+    <div class="sidebar">
+      <% @upcoming.each do |flyer| %>
+        <%= render :partial => 'flyer_sidebar', :locals => {:flyer => flyer} %>
+      <% end %>
+    </div>
+<% end %>

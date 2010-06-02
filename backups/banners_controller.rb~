@@ -1,0 +1,58 @@
+class BannersController < ApplicationController
+
+  filter_resource_access :additional_collection => [:admin, :redirect]
+
+  def redirect
+    @banner = Banner.find(params[:banner])
+    @banner_campaign = BannerCampaign.find(params[:campaign])
+    @banner_campaign.increment!(:statistics_total)
+    
+    user_id = current_user ? current_user.id : 0
+    Statistic.unique(@banner_campaign.id, "banner_campaigns", request.remote_ip, user_id)
+
+    redirect_to @banner.url
+  end
+
+  def admin
+    @banners = Banner.with_permissions_to(:manage).admin(params[:page], params[:sort], params[:order], params[:search])
+  end
+  
+  def show
+  end
+  
+  def new
+  end
+
+  def create
+    @banner = Banner.new(params[:banner])
+    if @banner.save
+      @banner = Banner.last
+      
+      if @banner.media_content_type.include?('flash') or @banner.update_attributes(params[:banner])
+        flash[:notice] = t('flash.banner_created')
+        redirect_to @banner
+      end
+    else
+      render :action => "new"
+    end
+  end
+
+  def edit
+  end
+  
+  def update
+    if @banner.update_attributes(params[:banner])
+      flash[:notice] = t(:banner_updated)
+      redirect_to @banner
+    else
+      render :action => 'edit'
+    end
+  end
+  
+  def destroy
+    @banner.destroy
+
+    flash[:notice] = t(:banner_destroyed)
+    redirect_to admin_banners_path
+  end
+end

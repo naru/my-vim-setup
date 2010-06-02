@@ -1,0 +1,37 @@
+class Person < ActiveRecord::Base
+
+  belongs_to :static_content
+
+  validates_presence_of :first_name, :surname
+
+  named_scope :highlighted,
+              :conditions => ['highlight = ?', true],
+              :order => 'first_name asc'
+
+  after_save :clear_cache
+  after_delete :clear_cache
+
+  def clear_cache
+    Rails.cache.delete("people_highlighted_#{self.static_content.language_code}")
+  end
+
+  def full_name
+    [first_name, surname].join(' ')
+  end
+
+  def to_param
+    "#{id}-#{full_name.to_url}"
+  end
+
+  def self.admin(page, sort, order, search)
+  paginate :per_page => 100, :page => page,
+           :conditions => ["first_name LIKE ? OR surname LIKE ?", "%#{search}%", "%#{search}%"],
+           :order => "#{sort || 'first_name'} #{order || 'asc'}"
+  end
+
+  def self.public(page)
+  paginate :per_page => 100, :page => page,
+           :order => "created_at asc"
+  end
+
+end

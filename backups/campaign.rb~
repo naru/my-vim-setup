@@ -1,0 +1,23 @@
+class Campaign < ActiveRecord::Base
+  belongs_to :flyer
+  belongs_to :user
+  validates_presence_of :start, :finish
+
+  acts_as_state_machine :initial => :pending
+
+  state :pending
+  state :active
+  state :inactive
+
+  event :activate do
+    transitions :to => :active, :from => [:pending, :inactive]
+  end
+
+  event :close do
+    transitions :to => :inactive, :from => [:active, :pending]
+  end
+
+  named_scope :current,
+    :conditions => ["now() BETWEEN start AND FINISH"]
+
+end

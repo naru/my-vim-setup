@@ -1,0 +1,21 @@
+RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
+
+require File.join(File.dirname(__FILE__), 'boot')
+
+
+require 'rss'
+
+#require 'ruby_parser'
+
+Rails::Initializer.run do |config|
+  config.time_zone = 'Tallinn'
+
+  config.action_controller.session = {
+    :session_key => '_gossip_session',
+    :secret      => 'efa21d14bbc4e03e5df5122658751e26cb61d0f6b735ec327c5e54b45dcd547b625c56f56b954c05c68224da27bf977e15ac3e098f8aee4e6aef9bda98425052'
+  }
+
+  config.action_controller.perform_caching = true
+  config.cache_store = :mem_cache_store
+  #config.load_once_paths += %W( #{RAILS_ROOT}/lib )
+end

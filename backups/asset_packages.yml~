@@ -1,0 +1,49 @@
+--- 
+javascripts: 
+- mootools:
+  - mootools/mootools-1.2.4-core
+  - mootools/mootools-1.2.4.2-more
+
+- base: 
+  - action_chain
+  - application
+  - datepicker
+  - quickbox
+  - gmap
+
+- tinymce:
+  - tiny_mce/tiny_mce
+  - tinymce_init
+
+- formcheck:
+  - formcheck/formcheck
+  - formcheck/lang/et
+
+- autocompleter:
+  - autocompleter/autocompleter
+  - autocompleter/autocompleter.local
+  - autocompleter/autocompleter.request
+  - autocompleter/observer
+
+stylesheets: 
+- base: 
+  - layout
+  - application
+  - datepicker
+  - quickbox
+  - login
+  - drop_menu
+  - share_buttons
+  - header_nav
+  - footer
+  - comments
+  - gmap
+
+autocompleter:
+  - autocompleter
+
+formcheck:
+  - formcheck
+
+mobile:
+  - mobile

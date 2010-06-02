@@ -1,0 +1,42 @@
+<h1><%= t(:all_flyers) %></h1>
+<table class="list">
+  <tr>
+    <th><%= t :event %></th>
+    <th><%= t :when %></th>
+    <th><%= t :venue %></th>
+    <th><%= t :state %></th>
+    <th><%= t :displays %>*</th>
+    <th><%= t :clicks %></th>
+    <th><%= t :score %></th>
+    <th><%= t :options %></th>
+  </tr>
+
+<% @flyers.each do |flyer| %>
+  <tr>
+    <td style="max-width:220px;"><%=h flyer.event %></td>
+    <td><%= good_date(flyer) %></td>
+    <td><%=h flyer.event_venue %></td>
+    <td><%=h flyer.state %></td>
+    <td><%= flyer.display_count || '-' %></td>
+    <td><%= flyer.flyer_statistics_count %> / <%= flyer.flyer_statistics_total %></td>
+    <td><%= flyer.score %> 
+               <%= link_to('+', increment_score_flyers_path(:id => flyer)) %>/
+               <%= link_to('-', decrement_score_flyers_path(:id => flyer)) %></td>
+    <td>
+        <%= link_to image_tag('icons/show.png'), flyer %>
+        <%= link_to image_tag('icons/edit.png'), edit_flyer_path(flyer) %>
+        <%= link_to image_tag('icons/destroy.png'), flyer, :confirm => t(:are_you_sure), :method => :delete %>
+    </td>
+  </tr>
+<% end %>
+</table>
+<div style="text-align:right; color:#999;">
+*<%= note("Flaieri näitamised esilehel.") %>
+</div>
+<br />
+<br />
+<br />
+
+<%= link_to t(:new_flyer), new_flyer_path %>
+
+<%= will_paginate @flyers %>

@@ -1,0 +1,99 @@
+require 'test_helper'
+
+class LocationsControllerTest < ActionController::TestCase
+
+  should_require_admin :admin, 'get'
+
+  context "on GET to :admin as an admin" do
+    setup do
+      login_as_supadmin
+      get :admin
+    end
+
+    should_assign_to :locations
+    should_render_template :admin
+  end
+
+  context "index action" do
+    setup {get :index}
+    should_assign_to :locations
+    should_render_template :index
+  end
+
+  should_require_admin :show, 'get', :id => Factory(:location).id
+
+  context "show action" do
+    setup do
+      login_as_supadmin
+      @location = Factory(:location)
+      get :show, :id => @location.id
+    end
+    should_assign_to :location
+    should_render_template :show
+  end
+
+  should_require_admin :new, 'get'
+
+  context "on GET to :new" do
+    setup do
+      login_as_supadmin
+      get :new
+    end
+    should_assign_to :location
+    should_render_template :new
+  end
+
+  should_require_admin :create, 'get', :location => Factory.build(:location).attributes
+
+  context "on POST to :create" do
+    setup do
+      @location = Factory.build(:location).attributes
+      post :create, :location => @location
+    end
+
+    should_change("The number of locations", :by => 1) { Location.count }
+  end
+
+  should_require_admin :edit, 'get', :id => Factory(:location).id
+
+  context "on GET to :edit as an admin" do
+    setup do
+      login_as_supadmin
+      @location = Factory(:location)
+      get :edit, :id => @location.id
+    end
+
+    should_respond_with :success
+    should_render_template :edit
+  end
+
+  should_require_admin :update, 'post', :id => Factory(:location).id, :location => { :amount => '5kg'}
+
+  context "on PUT to :update as an admin" do
+    setup do
+      login_as_supadmin
+      @location = Factory(:location)
+      put :update, :id => @location.id, :location => { :city => 'kaboo' }
+    end
+
+    should_respond_with :redirect
+    should_redirect_to("location_path") { @location }
+  end
+
+  should_require_admin :destroy, 'delete', :id => Factory(:location).id
+
+  context "to :destroy as an admin" do
+    setup do
+      @location = Factory(:location)
+    end
+    context "on DELETE" do
+      setup do
+        login_as_supadmin
+        delete :destroy, :id => @location.id
+      end
+      should_respond_with :redirect
+      should_redirect_to("admin") { admin_locations_path }
+      should_change("The number of locations", :by => -1) { Location.count }
+    end
+  end
+end

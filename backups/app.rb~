@@ -1,0 +1,36 @@
+require 'rubygems'
+require 'sinatra'
+require 'dm-core'
+require 'open-uri'
+require 'lib/spider'
+
+# Open the database vortices.db
+DataMapper.setup( :default, "sqlite3://#{Dir.pwd}/vortices.db" )
+
+# Define the Vortex model
+class Vortex
+  include DataMapper::Resource
+
+  property :id, Serial
+  property :name, String
+  property :latitude, Float
+  property :longitude, Float
+  property :rating, Float
+  property :address, String
+  property :info, String
+  property :img_url, String
+  property :remote_id, Integer
+end
+
+# Automatically create the tables if they don't exist
+ DataMapper.auto_migrate!
+
+get '/latlng' do
+  "[#{Spider::Request.get_latlong_values}]"
+end
+
+get '/initial_data' do
+  vortices = Vortex.all
+  array = vortices.collect { |v| [v.rating, v.longitude, v.latitude, v.remote_id, v.name, v.address, v.info, v.img_url]}
+  "[\"#{array.flatten.join("\", \"")}\"]"
+end

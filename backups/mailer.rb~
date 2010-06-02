@@ -1,0 +1,10 @@
+class Mailer < ActionMailer::Base
+
+  def feedback(feedback, site_email)
+    recipients  site_email
+    from        site_email
+    subject     feedback.subject
+    body        :feedback => feedback
+  end
+
+end

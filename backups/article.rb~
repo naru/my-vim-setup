@@ -1,0 +1,84 @@
+class Article < ActiveRecord::Base
+
+  belongs_to :article_category
+  belongs_to :article_section
+  belongs_to :user
+
+  has_one :static_content, :through => :article_section
+  has_many :pictures, :as => :picturable, :attributes => true, :discard_if => proc { |picture| picture.picture_file_name.blank? }
+  has_many :comments, :as => :commentable
+  has_many :statistics, :as => :analyzable
+
+  has_attached_file :main_pic,
+                    :processors => [:watermark],
+                    :styles => {
+                      :original => "800x800>",
+                      :mega => {
+                        :geometry => "640x640>",
+                        :watermark_path => "#{RAILS_ROOT}/public/images/watermark.png",
+                        :position => "SouthEast"
+                      },
+                      :large => "478x230#",
+                      :medium => "230x220#",
+                      :small => "150x120#",
+                      :mini => "60x90#",
+                    },
+                    :url  => "/images/articles/main_pic/:id/:style/:basename.:extension",
+                    :path => ":rails_root/public/images/articles/main_pic/:id/:style/:basename.:extension"
+
+  validates_presence_of :user_id, :headline, :author_name, :author_task, :live_at, :article_category_id, :article_section_id
+  validates_attachment_size :main_pic, :less_than => 5.megabytes
+  validates_attachment_content_type :main_pic, :content_type => ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif']
+
+  named_scope :public,
+              :conditions => ['live_at < ? AND ((dies_at IS NOT NULL and dies_at > ?) OR dies_at IS NULL) AND (draft = ? OR draft IS NULL)', Time.zone.now, Time.zone.now, false],
+              :order => "live_at desc"
+
+  named_scope :recent,
+              :conditions => ['live_at > ? and live_at < ? AND ((dies_at IS NOT NULL and dies_at > ?) OR dies_at IS NULL) AND (draft = ? OR draft IS NULL)', Time.zone.now-4.days, Time.zone.now, Time.zone.now, false],
+              :order => "live_at desc"
+
+  named_scope :highlighted,
+              :conditions => ['highlight = ?', true],
+              :limit => 10,
+              :order => "live_at desc"
+
+  named_scope :quote,
+              :conditions => ["quote_content IS NOT NULL AND quote_content <> ''"],
+              :limit => 6,
+              :order => "live_at desc"
+
+  after_save :clear_cache
+
+  def clear_cache
+    Rails.cache.delete("articles_#{self.article_section.comp_name}_#{self.static_content.language_code}")
+  end
+
+  def to_param
+    "#{id}-#{headline.to_url}"
+  end
+
+  def video
+    self.content.include?('youtube.com/v')
+  end
+
+  def live?
+    self.live_at < Time.zone.now && ((self.dies_at ? self.dies_at > Time.zone.now : false) || self.dies_at == nil) && (self.draft == false || self.draft == nil)
+  end
+
+  def self.admin(page, sort, order, search)
+  paginate :per_page => 180, :page => page,
+           :conditions => ["headline like ? OR intro like ? OR content like ? OR keywords like ? OR author_name like ? OR main_pic_caption like ? OR flash_text like ? OR attention like ?",
+             "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%"],
+           :order => "#{sort || 'live_at'} #{order || 'desc'}"
+  end
+
+  def self.list(page, search, article_section)
+  paginate :per_page => 30, :page => page,
+           :conditions => ["((? IS NOT NULL and article_section_id = ?) OR ? IS NULL) AND
+             (headline like ? OR intro like ? OR content like ? OR keywords like ? OR author_name like ? OR main_pic_caption like ? OR flash_text like ? OR attention like ?)",
+             article_section, article_section, article_section, "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%"],
+           :order => "live_at desc"
+  end
+
+end

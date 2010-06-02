@@ -1,0 +1,11 @@
+class UserObserver < ActiveRecord::Observer
+  def after_create(user)
+    user.reload
+    UserMailer.deliver_signup_notification(user)
+  end
+
+  def after_save(user)
+    user.reload
+    UserMailer.deliver_forgot_password(user) if user.recently_forgot_password?
+  end
+end unless RAILS_ENV == 'test'

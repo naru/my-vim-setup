@@ -1,0 +1,11 @@
+tinyMCE.init({
+    theme : "advanced",
+    mode : "textareas",
+    editor_selector : "tiny_mce",
+    theme_advanced_text_colors : "ff3300,006600,0033ff",
+    theme_advanced_font_sizes : "1,2,3,4,5,6,7",
+    theme_advanced_toolbar_location : "top",
+    theme_advanced_buttons1 : "formatselect,forecolor,bold,italic,underline,|,bullist,numlist,hr,|,cut,copy,paste,|,removeformat,undo,redo,|,link,unlink,separator,charmap,code",
+    theme_advanced_buttons2 : "",
+    theme_advanced_buttons3 : ""
+});

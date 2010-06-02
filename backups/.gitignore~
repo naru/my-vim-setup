@@ -1,0 +1,14 @@
+.bundle
+*.swp
+db/*.sqlite3
+log/*.log
+tmp/**/*
+config/database.yml
+nbproject/*
+#bundler
+vendor/bin/
+vendor/cache/
+vendor/gems/
+vendor/specifications/
+
+rerun.txt
